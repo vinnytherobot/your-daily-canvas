@@ -1,6 +1,16 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { AppShell, Icon } from "../components/AppShell";
 
+type Chapter = { icon: string; t: string; s: string; style: string; textHighlight?: boolean };
+type Student = {
+  name: string; level: string; levelClass: string; topic: string; avatar: string;
+  progress: number; progressColor: string; progressTextColor: string;
+  chapters: Chapter[];
+  aiNote: { bg: string; text: string; icon: string; msg: string };
+  primaryBtn: { icon: string; label: string; style?: string };
+  secondaryIcon: string; lastAccess: string;
+};
+
 export const Route = createFileRoute("/advisor")({
   head: () => ({ meta: [{ title: "Thesius | Painel do Orientador" }] }),
   component: Advisor,

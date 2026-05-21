@@ -16,7 +16,7 @@ export const Route = createFileRoute("/advisor")({
   component: Advisor,
 });
 
-const students = [
+const students: Student[] = [
   {
     name: "Beatriz Vasconcelos",
     level: "Doutorado em Ciência da Computação",

@@ -1,0 +1,195 @@
+/* TipTap — página acadêmica (estilo Word/Docs) */
+.tiptap-editor-wrap {
+  display: flex;
+  flex-direction: column;
+  min-height: 100%;
+}
+
+.tiptap-toolbar {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 2px;
+  padding: 8px 12px;
+  background: #f5f5f2;
+  border-bottom: 1px solid #e5e5e0;
+  border-radius: 12px 12px 0 0;
+  position: sticky;
+  top: 0;
+  z-index: 5;
+}
+
+.tiptap-toolbar-group {
+  display: flex;
+  align-items: center;
+  gap: 1px;
+  padding-right: 8px;
+  margin-right: 8px;
+  border-right: 1px solid #e0e0da;
+}
+
+.tiptap-toolbar-group:last-child {
+  border-right: none;
+  margin-right: 0;
+  padding-right: 0;
+}
+
+.tiptap-toolbar-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 32px;
+  height: 32px;
+  border: none;
+  border-radius: 6px;
+  background: transparent;
+  color: #3d3d3d;
+  cursor: pointer;
+  transition: background 0.15s, color 0.15s;
+}
+
+.tiptap-toolbar-btn:hover:not(:disabled) {
+  background: #e8e8e3;
+  color: #1a1a1a;
+}
+
+.tiptap-toolbar-btn.is-active {
+  background: #c9a962;
+  color: #1a1a1a;
+}
+
+.tiptap-toolbar-btn:disabled {
+  opacity: 0.35;
+  cursor: not-allowed;
+}
+
+.tiptap-toolbar-select {
+  height: 32px;
+  padding: 0 8px;
+  border: 1px solid #e0e0da;
+  border-radius: 6px;
+  background: #fff;
+  font-size: 13px;
+  color: #3d3d3d;
+  cursor: pointer;
+  min-width: 120px;
+}
+
+.tiptap-editor-page {
+  flex: 1;
+  background: #fafaf8;
+  color: #1a1a1a;
+  border-radius: 0 0 12px 12px;
+  box-shadow: inset 0 1px 0 rgba(0, 0, 0, 0.04);
+}
+
+.tiptap-editor-content {
+  max-width: 100%;
+  min-height: 720px;
+  padding: 48px 56px 80px;
+  outline: none;
+  font-family: "Inter", Georgia, "Times New Roman", serif;
+  font-size: 12pt;
+  line-height: 1.75;
+  text-align: justify;
+}
+
+.tiptap-editor-content:focus {
+  outline: none;
+}
+
+.tiptap-editor-content > *:first-child {
+  margin-top: 0;
+}
+
+.tiptap-editor-content h1 {
+  font-family: "Manrope", "Inter", sans-serif;
+  font-size: 1.75rem;
+  font-weight: 700;
+  line-height: 1.25;
+  margin: 0 0 1.25rem;
+  color: #1a1a1a;
+  text-align: left;
+}
+
+.tiptap-editor-content h2 {
+  font-family: "Manrope", "Inter", sans-serif;
+  font-size: 1.35rem;
+  font-weight: 600;
+  margin: 2rem 0 0.75rem;
+  color: #1a1a1a;
+  text-align: left;
+}
+
+.tiptap-editor-content h3 {
+  font-size: 1.15rem;
+  font-weight: 600;
+  margin: 1.5rem 0 0.5rem;
+  text-align: left;
+}
+
+.tiptap-editor-content p {
+  margin: 0 0 1rem;
+}
+
+.tiptap-editor-content ul,
+.tiptap-editor-content ol {
+  margin: 0 0 1rem 1.5rem;
+  padding: 0;
+}
+
+.tiptap-editor-content li {
+  margin-bottom: 0.35rem;
+}
+
+.tiptap-editor-content blockquote {
+  margin: 1.25rem 0;
+  padding: 0.75rem 1rem 0.75rem 1.25rem;
+  border-left: 4px solid #c9a962;
+  background: #f3f1eb;
+  font-style: italic;
+  color: #444;
+}
+
+.tiptap-editor-content a {
+  color: #8b6914;
+  text-decoration: underline;
+  cursor: pointer;
+}
+
+.tiptap-editor-content strong {
+  font-weight: 700;
+}
+
+.tiptap-editor-content em {
+  font-style: italic;
+}
+
+.tiptap-editor-content u {
+  text-decoration: underline;
+}
+
+.tiptap-editor-content s {
+  text-decoration: line-through;
+}
+
+.tiptap-editor-content p.is-editor-empty:first-child::before {
+  content: attr(data-placeholder);
+  float: left;
+  color: #9ca3af;
+  pointer-events: none;
+  height: 0;
+}
+
+.tiptap-editor-content .is-empty::before {
+  content: attr(data-placeholder);
+  float: left;
+  color: #9ca3af;
+  pointer-events: none;
+  height: 0;
+}
+
+/* Placeholder extension */
+.tiptap-editor-content[data-placeholder] .is-empty::before {
+  color: #adb5bd;
+}

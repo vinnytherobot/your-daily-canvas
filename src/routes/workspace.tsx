@@ -1,206 +1,299 @@
-import { createFileRoute, Link } from "@tanstack/react-router";
+import { createFileRoute, Link, useRouterState } from "@tanstack/react-router";
+import type { Editor } from "@tiptap/react";
+import { useCallback, useEffect, useRef, useState } from "react";
+import { Icon } from "../components/Icon";
+import { Logo } from "../components/Logo";
+import { AcademicEditor, type EditorStats } from "../components/editor/AcademicEditor";
+import { DocumentOutline } from "../components/workspace/DocumentOutline";
+import { CopilotPanel } from "../components/workspace/CopilotPanel";
+import {
+  type OutlineItem,
+  scrollToOutlineItem,
+} from "../lib/document-outline";
+
+const COPILOT_OPEN_KEY = "thesius:copilot-open";
 
 export const Route = createFileRoute("/workspace")({
-  head: () => ({ meta: [{ title: "Thesius | Workspace" }] }),
+  head: () => ({ meta: [{ title: "Thesius | Editor" }] }),
   component: Workspace,
 });
 
-const Icon = ({ name, className = "", fill, style }: { name: string; className?: string; fill?: boolean; style?: React.CSSProperties }) => (
-  <span className={`material-symbols-outlined ${className}`} style={{ ...(fill ? { fontVariationSettings: "'FILL' 1" } : {}), ...style }}>{name}</span>
-);
+function loadCopilotOpen(): boolean {
+  if (typeof window === "undefined") return true;
+  try {
+    const v = localStorage.getItem(COPILOT_OPEN_KEY);
+    return v === null ? true : v === "true";
+  } catch {
+    return true;
+  }
+}
+
+function saveCopilotOpen(open: boolean) {
+  try {
+    localStorage.setItem(COPILOT_OPEN_KEY, String(open));
+  } catch {
+    /* ignore */
+  }
+}
 
 function Workspace() {
+  const path = useRouterState({ select: (s) => s.location.pathname });
+  const editorRef = useRef<Editor | null>(null);
+
+  const [searchQuery, setSearchQuery] = useState("");
+  const [stats, setStats] = useState<EditorStats>({
+    words: 0,
+    characters: 0,
+    readingMinutes: 1,
+    saved: false,
+  });
+
+  const [outline, setOutline] = useState<OutlineItem[]>([]);
+  const [activeOutlineId, setActiveOutlineId] = useState<string | null>(null);
+  const [collapsedOutline, setCollapsedOutline] = useState<Set<string>>(new Set());
+  const [selectedText, setSelectedText] = useState("");
+
+  const [copilotOpen, setCopilotOpen] = useState(true);
+
+  useEffect(() => {
+    setCopilotOpen(loadCopilotOpen());
+  }, []);
+
+  const handleCopilotClose = () => {
+    setCopilotOpen(false);
+    saveCopilotOpen(false);
+  };
+
+  const handleCopilotOpen = () => {
+    setCopilotOpen(true);
+    saveCopilotOpen(true);
+  };
+
+  const handleStats = useCallback((s: EditorStats) => setStats(s), []);
+
+  const handleEditorReady = useCallback((editor: Editor) => {
+    editorRef.current = editor;
+  }, []);
+
+  const handleOutlineChange = useCallback((items: OutlineItem[], activeId: string | null) => {
+    setOutline(items);
+    setActiveOutlineId(activeId);
+  }, []);
+
+  const handleOutlineSelect = useCallback((item: OutlineItem) => {
+    setActiveOutlineId(item.id);
+    if (editorRef.current) scrollToOutlineItem(editorRef.current, item.pos);
+  }, []);
+
+  const handleToggleCollapse = useCallback((id: string) => {
+    setCollapsedOutline((prev) => {
+      const next = new Set(prev);
+      if (next.has(id)) next.delete(id);
+      else next.add(id);
+      return next;
+    });
+  }, []);
+
+  const handleAddSection = useCallback(() => {
+    const editor = editorRef.current;
+    if (!editor) return;
+    editor
+      .chain()
+      .focus()
+      .insertContent({ type: "heading", attrs: { level: 2 }, content: [{ type: "text", text: "Novo tópico" }] })
+      .run();
+  }, []);
+
+  const activeOutline = outline.find((o) => o.id === activeOutlineId);
+  const breadcrumbSection = activeOutline?.title ?? "Documento";
+
+  const handleExportPdf = () => window.print();
+
   return (
-    <div className="flex h-screen w-full overflow-hidden bg-background font-body-md text-on-surface">
-      {/* LEFT */}
-      <aside className="w-64 flex-shrink-0 bg-surface-container-low flex flex-col h-full shadow-[0_4px_20px_rgba(0,0,0,0.04)] z-30">
-        <div className="px-lg py-lg">
-          <Link to="/" className="flex items-center gap-sm mb-xl">
-            <Icon name="auto_stories" className="text-primary" fill />
-            <h1 className="font-headline-md text-headline-md font-bold text-primary tracking-tight">Thesius</h1>
+    <div className="flex h-screen w-full overflow-hidden bg-background font-body-md text-on-surface relative z-10 print:block print:h-auto print:overflow-visible">
+      <aside className="sidebar-elegant w-[260px] shrink-0 flex flex-col h-full z-30 print:hidden">
+        <div className="px-lg py-lg flex flex-col flex-1 min-h-0">
+          <Link to="/" className="flex items-center gap-md mb-lg shrink-0 group">
+            <Logo size={40} className="logo-glow transition-transform group-hover:scale-105" />
+            <h1 className="font-headline-md font-bold text-primary">Thesius</h1>
           </Link>
-          <button className="w-full flex items-center justify-center gap-xs py-sm bg-primary text-on-primary rounded-lg font-label-md active:scale-95 transition-transform mb-lg">
-            <Icon name="add" className="text-[20px]" /> New Project
+          <button type="button" className="btn-primary w-full py-2.5 rounded-xl font-label-md flex items-center justify-center gap-sm mb-lg shrink-0">
+            <Icon name="add" size={20} /> Novo projeto
           </button>
-          <nav className="space-y-1">
-            <Link to="/dashboard" className="flex items-center gap-md px-md py-sm rounded-lg text-on-surface-variant hover:bg-surface-variant cursor-pointer">
-              <Icon name="dashboard" /> <span className="font-label-md">Dashboard</span>
+          <nav className="space-y-1 shrink-0">
+            <Link
+              to="/dashboard"
+              className={`flex items-center gap-md px-md py-2.5 rounded-xl transition-all ${
+                path.startsWith("/dashboard") ? "nav-item-active font-semibold" : "text-on-surface-variant hover:bg-white/5"
+              }`}
+            >
+              <Icon name="dashboard" size={22} /> <span className="font-label-md">Projetos</span>
             </Link>
-            <div className="flex items-center gap-md px-md py-sm rounded-lg text-primary font-bold border-r-2 border-primary bg-surface-variant/30">
-              <Icon name="edit_note" fill /> <span className="font-label-md">Workspace</span>
+            <div className="nav-item-active flex items-center gap-md px-md py-2.5 rounded-xl font-semibold">
+              <Icon name="edit_note" fill size={22} /> <span className="font-label-md">Editor</span>
             </div>
-            <Link to="/advisor" className="flex items-center gap-md px-md py-sm rounded-lg text-on-surface-variant hover:bg-surface-variant cursor-pointer">
-              <Icon name="book_4" /> <span className="font-label-md">Library</span>
+            <Link
+              to="/library"
+              className={`flex items-center gap-md px-md py-2.5 rounded-xl transition-all ${
+                path.startsWith("/library") ? "nav-item-active font-semibold" : "text-on-surface-variant hover:bg-white/5"
+              }`}
+            >
+              <Icon name="library_books" size={22} /> <span className="font-label-md">Referências</span>
             </Link>
           </nav>
-          <div className="mt-xl">
-            <h3 className="font-label-sm text-on-surface-variant/60 uppercase tracking-widest mb-md">Document Structure</h3>
-            <div className="space-y-sm custom-scrollbar max-h-[409px] overflow-y-auto">
-              <div className="flex items-center gap-xs py-xs text-on-surface hover:text-secondary cursor-pointer">
-                <Icon name="expand_more" className="text-[18px]" />
-                <span className="font-label-md truncate">Abstract & Keywords</span>
-              </div>
-              <div className="flex items-center gap-xs py-xs text-on-surface hover:text-secondary cursor-pointer">
-                <Icon name="expand_more" className="text-[18px]" />
-                <span className="font-label-md truncate">1. Introduction</span>
-              </div>
-              <div className="ml-lg py-xs text-on-surface-variant/70 border-l border-outline-variant pl-md hover:text-secondary cursor-pointer">
-                <span className="font-label-md">1.1 Theoretical Basis</span>
-              </div>
-              <div className="flex items-center gap-xs py-xs font-semibold text-secondary cursor-pointer">
-                <Icon name="expand_more" className="text-[18px]" />
-                <span className="font-label-md truncate">2. Methodology</span>
-              </div>
-              <div className="flex items-center gap-xs py-xs text-on-surface-variant hover:text-secondary cursor-pointer">
-                <Icon name="chevron_right" className="text-[18px]" />
-                <span className="font-label-md truncate">3. Data Analysis</span>
-              </div>
+          <div className="mt-lg flex-1 min-h-0 flex flex-col">
+            <div className="flex items-center justify-between mb-md shrink-0">
+              <h3 className="font-label-sm text-on-surface-variant/60 uppercase tracking-widest">Estrutura</h3>
+              <span className="text-[10px] text-on-surface-variant/50 tabular-nums">{outline.length} tópicos</span>
+            </div>
+            <div className="custom-scrollbar overflow-y-auto flex-1 min-h-0 -mx-1 px-1">
+              <DocumentOutline
+                items={outline}
+                activeId={activeOutlineId}
+                collapsed={collapsedOutline}
+                onToggleCollapse={handleToggleCollapse}
+                onSelect={handleOutlineSelect}
+                onAddSection={handleAddSection}
+              />
             </div>
           </div>
         </div>
-        <div className="mt-auto p-lg border-t border-outline-variant/10">
-          <div className="flex items-center gap-md">
-            <img alt="User" className="w-10 h-10 rounded-full border border-outline-variant/30" src="https://lh3.googleusercontent.com/aida-public/AB6AXuDh0qnx7qPLRAd1ZdcpgOoNf6zaLtrsJq-muWJsF_iS4YEWrahccQB0Ggkoh3XOZsIwuyy20uKkCEDUEWcEwUFex5mFPSxLi8neI_TCIFtoy3Fb6XcFbadc-6p3aTJR9bTxNdeTShlAWKC56WVNBkqXvo-Zj5LOLoSQGcr5FF3LwDRkCPB4Bb7oCUo1m7CR5n3JRwnbYURRl5K2Kez1-aJyArHrB_OrK9_ZpxxEGSVmZ1m4-eeR78ZNhuevc39LxGBQxqQ2Lg0w9bn8" />
-            <div className="overflow-hidden">
-              <p className="font-label-md text-primary font-bold truncate">Academic Pro</p>
-              <p className="font-label-sm text-on-surface-variant/60 truncate">Researcher</p>
+        <div className="p-lg border-t border-white/6 shrink-0">
+          <div className="flex items-center gap-md min-w-0">
+            <img
+              alt=""
+              className="w-10 h-10 rounded-full border border-white/10 shrink-0 object-cover"
+              src="https://lh3.googleusercontent.com/aida-public/AB6AXuCF6J24-HC4bli0NsoQFB5Ci4RS2RO8iYZDyeiJ87q4_B-NDbFYgHuWsQ6ZLCNjVfJrec95RJ_blrA3_JPCExdyPMlDTkr5oMB7HSpaKR9rhKqKjgbGqd0AU8WPFil5CM-AH6xh_WHoWhLr7-ki2jEjbkwuEPqZKQLF_lu4YKwDHXZjptR62iFnKjbDDvLYU6-9U-yNuZBoeTvHfPlUyqY-KX1qQlLrATYR0briQIsnbVOkJkM_wf9jxIOiJ3bJG7ofSfVobiDFbBlD"
+            />
+            <div className="min-w-0 flex-1">
+              <p className="font-label-md text-primary font-bold truncate">Marina Costa</p>
+              <p className="font-label-sm text-on-surface-variant/60 truncate">Plano Pro</p>
             </div>
-            <Icon name="settings" className="ml-auto text-on-surface-variant cursor-pointer" />
+            <button type="button" className="shrink-0 p-1 rounded-lg hover:bg-white/5" aria-label="Configurações">
+              <Icon name="settings" className="text-on-surface-variant" size={22} />
+            </button>
           </div>
         </div>
       </aside>
 
-      {/* CENTER */}
-      <main className="flex-1 flex flex-col min-w-0 bg-background overflow-hidden relative">
-        <header className="h-16 flex items-center justify-between px-xl border-b border-outline-variant/20 bg-surface-container-lowest/80 backdrop-blur-xl sticky top-0 z-20">
-          <div className="flex items-center gap-lg">
-            <div className="flex items-center gap-sm bg-surface-container-low rounded-full px-md py-xs border border-outline-variant/10">
-              <Icon name="search" className="text-[18px] text-on-surface-variant" />
-              <input className="bg-transparent border-none focus:ring-0 text-label-md w-48 outline-none" placeholder="Search in paper..." />
-            </div>
-            <div className="h-6 w-[1px] bg-outline-variant/30"></div>
-            <div className="flex items-center gap-md text-on-surface-variant">
-              {["format_bold", "format_italic", "format_quote", "link"].map((i) => (
-                <button key={i} className="p-xs hover:bg-surface-variant rounded transition-colors"><Icon name={i} /></button>
-              ))}
+      <main className="flex-1 flex flex-col min-w-0 bg-background overflow-hidden relative print:overflow-visible">
+        <header className="h-[72px] flex items-center justify-between gap-md px-lg md:px-xl border-b border-white/6 surface-glass sticky top-0 z-20 shrink-0 print:hidden">
+          <div className="flex items-center gap-md min-w-0 flex-1">
+            <div className="flex items-center gap-sm bg-white/4 rounded-full px-md py-1.5 border border-white/8 min-w-0 max-w-sm flex-1">
+              <Icon name="search" className="text-on-surface-variant shrink-0" size={18} />
+              <input
+                className="bg-transparent border-none focus:ring-0 text-sm w-full min-w-0 outline-none placeholder:text-on-surface-variant/50"
+                placeholder="Buscar no documento..."
+                type="search"
+                value={searchQuery}
+                onChange={(e) => setSearchQuery(e.target.value)}
+                onKeyDown={(e) => {
+                  if (e.key === "Enter") e.currentTarget.blur();
+                }}
+              />
             </div>
           </div>
-          <div className="flex items-center gap-md">
-            <div className="flex -space-x-2 mr-md">
-              <img alt="" className="w-8 h-8 rounded-full border-2 border-white" src="https://lh3.googleusercontent.com/aida-public/AB6AXuAqo6qdf6hR-FxPUUY6bUxb4JVSmy9DD7-P4zVT3T6SQ7mzlo9RE9tYtjtnrkQqynVHnWJc0TxY9zJ1QAwOjx0UpUvbSSyjnqXTpw0SHTWmsxvpf_gMkL3wh-G3yRvWzJCmlsVrK6h7uyqcS_UJlgANbAainwt-1dMWMcaZg1ko_aEgfFSwrAXX-8R6ScXCQuw9koHSZyqa70YDyUERaTjs8rbg7RNQGEuZQ69bW8sPPatCjX_JDPuJdazPZm3qKjp9JHIzkdr4bKxZ" />
-              <img alt="" className="w-8 h-8 rounded-full border-2 border-white" src="https://lh3.googleusercontent.com/aida-public/AB6AXuApZO6Dz6c8DuWQpLtb3Iq44ULCSkYVuAA6BQML1qjaButhDslzZMGNmddE74fX63T8Ccu1Fe3IgwFFPO1JO7B5OKQKsMbO7DGRd0_TDaKNjGtsdProaL0DWAn5wWxkQIjnJb4KHR50siPyRti9BMj-IJKrIgDFU6CMd96Utd1u0rrHoNvyIp2d1dNh9OlQztixyAvw5jSdU8jRX45zAD6YVMwV8IygsyIAAKX4BDGGmDE3BrG74KiRRE5BVMppRwekcQUDbC5SWvo9" />
-              <div className="w-8 h-8 rounded-full border-2 border-white bg-primary-fixed-dim text-[10px] flex items-center justify-center font-bold text-on-primary-fixed">+3</div>
-            </div>
-            <button className="p-xs text-on-surface-variant hover:text-primary"><Icon name="history" /></button>
-            <button className="p-xs text-on-surface-variant hover:text-primary"><Icon name="share" /></button>
-            <button className="bg-secondary text-on-secondary px-md py-sm rounded-lg font-label-sm shadow-sm hover:opacity-90">Export PDF</button>
+          <div className="flex items-center gap-sm shrink-0">
+            {!copilotOpen && (
+              <button
+                type="button"
+                onClick={handleCopilotOpen}
+                className="hidden lg:flex items-center gap-sm btn-ghost px-md py-2 rounded-xl font-label-sm"
+                aria-label="Abrir copiloto IA"
+              >
+                <Icon name="auto_awesome" size={20} className="text-primary" />
+                Copiloto IA
+              </button>
+            )}
+            <button type="button" className="p-2 text-on-surface-variant hover:text-primary rounded-lg hover:bg-white/5" aria-label="Histórico">
+              <Icon name="history" size={22} />
+            </button>
+            <button type="button" className="p-2 text-on-surface-variant hover:text-primary rounded-lg hover:bg-white/5" aria-label="Compartilhar">
+              <Icon name="share" size={22} />
+            </button>
+            <button type="button" onClick={handleExportPdf} className="btn-primary px-md py-2 rounded-xl font-label-sm whitespace-nowrap">
+              Exportar PDF
+            </button>
           </div>
         </header>
 
-        <div className="flex-1 overflow-y-auto custom-scrollbar pt-xl pb-32 px-xl">
-          <div className="max-w-[800px] mx-auto bg-surface-container-lowest shadow-[0_10px_40px_rgba(0,0,0,0.02)] border border-outline-variant/10 rounded-xl p-24 min-h-[1200px]">
-            <div className="flex items-center gap-xs mb-xl">
-              <span className="font-label-sm text-on-surface-variant/40">My Projects</span>
-              <Icon name="chevron_right" className="text-[14px] text-on-surface-variant/40" />
-              <span className="font-label-sm text-on-surface-variant/40">Dissertation 2024</span>
-              <Icon name="chevron_right" className="text-[14px] text-on-surface-variant/40" />
-              <span className="font-label-sm text-secondary font-bold">Methodology Section</span>
-            </div>
-            <h1 className="font-display-lg text-display-lg text-primary mb-xl outline-none" contentEditable suppressContentEditableWarning>2. Comprehensive Methodology</h1>
-            <div className="space-y-lg text-body-lg leading-relaxed text-on-surface-variant">
-              <p>
-                This research utilizes a <span className="bg-secondary-container/10 border-b-2 border-secondary-container text-primary px-1 rounded-sm cursor-help relative group">mixed-methods approach
-                  <span className="absolute bottom-full left-0 mb-2 w-64 p-sm glass-panel text-[12px] opacity-0 group-hover:opacity-100 pointer-events-none transition-opacity shadow-lg rounded-lg">
-                    <strong className="block mb-1">AI Suggestion:</strong> Consider clarifying if it's sequential or concurrent mixed methods.
-                  </span>
-                </span> to evaluate the impact of artificial intelligence on academic writing productivity. The quantitative phase involved a survey of 500 graduate students across diverse disciplines.
-              </p>
-              <div className="my-xl p-lg border-l-4 border-on-tertiary-container bg-tertiary-fixed rounded-r-xl">
-                <div className="flex items-center gap-sm mb-xs">
-                  <Icon name="auto_awesome" className="text-on-tertiary-fixed-variant text-[20px]" fill />
-                  <span className="font-label-sm text-on-tertiary-fixed-variant uppercase">Contextual Insight</span>
-                </div>
-                <p className="text-body-md text-on-tertiary-fixed italic">"Your methodology aligns with the standards established by Creswell & Creswell (2018). Would you like to automatically insert the citation here?"</p>
-              </div>
-              <p>
-                Data collection was conducted over a six-month period. For the qualitative component, semi-structured interviews were performed with leading experts in human-computer interaction. The results demonstrate a significant shift in <span className="editor-cursor">cognitive offloading strategies</span> among researchers utilizing modern LLM-based tools.
-              </p>
-              <div className="my-lg p-md glass-panel rounded-lg border border-outline-variant/20 flex gap-md items-start">
-                <div className="bg-secondary-container text-on-secondary-container p-sm rounded-lg"><Icon name="menu_book" /></div>
-                <div>
-                  <h4 className="font-label-md text-primary">Source: "The Evolution of Digital Scaffolding"</h4>
-                  <p className="text-[12px] text-on-surface-variant/70">Journal of Academic Technology, Vol. 45, 2023</p>
-                  <button className="mt-xs text-secondary font-label-sm hover:underline">Link Citation</button>
-                </div>
-              </div>
-              <p>Preliminary findings suggest that the precision of automated formatting (ABNT/APA) reduces administrative overhead by approximately 40%, allowing for deeper focus on theoretical development.</p>
-            </div>
+        <div className="flex-1 overflow-y-auto custom-scrollbar py-lg px-md md:px-xl pb-28 print:overflow-visible print:py-0">
+          <div className="max-w-[816px] mx-auto print:max-w-none">
+            <nav className="flex flex-wrap items-center gap-xs mb-lg text-sm print:hidden" aria-label="Trilha">
+              <Link to="/dashboard" className="text-on-surface-variant/50 hover:text-primary">
+                Meus projetos
+              </Link>
+              <Icon name="chevron_right" size={14} className="text-on-surface-variant/40" />
+              <span className="text-on-surface-variant/50">TCC — IA na educação</span>
+              <Icon name="chevron_right" size={14} className="text-on-surface-variant/40" />
+              <span className="text-primary font-bold truncate max-w-[240px]" title={breadcrumbSection}>
+                {breadcrumbSection}
+              </span>
+            </nav>
+            <AcademicEditor
+              onStatsChange={handleStats}
+              searchQuery={searchQuery}
+              onEditorReady={handleEditorReady}
+              onOutlineChange={handleOutlineChange}
+              onSelectionChange={setSelectedText}
+            />
           </div>
         </div>
 
-        <div className="absolute bottom-md left-1/2 -translate-x-1/2 flex items-center gap-lg glass-panel px-lg py-sm rounded-full border border-outline-variant/30 shadow-lg">
-          <div className="flex items-center gap-xs">
-            <span className="w-2 h-2 rounded-full bg-green-500 animate-pulse"></span>
-            <span className="font-label-sm text-on-surface-variant">Cloud Synced</span>
+        <div className="absolute bottom-md left-1/2 -translate-x-1/2 z-20 flex items-center gap-md glass-panel px-lg py-sm rounded-full border border-white/10 shadow-lg max-w-[calc(100%-2rem)] print:hidden">
+          <div className="flex items-center gap-xs shrink-0">
+            <span className={`w-2 h-2 rounded-full ${stats.saved ? "status-dot" : "bg-amber-400 animate-pulse"}`} />
+            <span className="font-label-sm text-on-surface-variant whitespace-nowrap">
+              {stats.saved ? "Salvo" : "Salvando…"}
+            </span>
           </div>
-          <div className="h-4 w-[1px] bg-outline-variant/30"></div>
-          <span className="font-label-sm text-on-surface-variant">1,452 Words</span>
-          <div className="h-4 w-[1px] bg-outline-variant/30"></div>
-          <span className="font-label-sm text-on-surface-variant">Read Time: 6m</span>
+          <div className="h-4 w-px bg-white/10 shrink-0" />
+          <span className="font-label-sm text-on-surface-variant whitespace-nowrap tabular-nums">
+            {stats.words.toLocaleString("pt-BR")} palavras
+          </span>
+          <div className="h-4 w-px bg-white/10 shrink-0 hidden sm:block" />
+          <span className="font-label-sm text-on-surface-variant whitespace-nowrap hidden sm:inline tabular-nums">
+            Leitura: {stats.readingMinutes} min
+          </span>
         </div>
       </main>
 
-      {/* RIGHT */}
-      <aside className="w-80 flex-shrink-0 bg-surface-container-low border-l border-outline-variant/20 flex flex-col h-full z-10">
-        <div className="p-lg flex flex-col h-full">
-          <div className="flex items-center justify-between mb-xl">
-            <h2 className="font-label-md font-bold text-primary flex items-center gap-sm">
-              <Icon name="bolt" className="text-secondary" fill /> AI Assistant
-            </h2>
-            <Icon name="close" className="text-on-surface-variant text-[20px] cursor-pointer hover:text-primary" />
-          </div>
-          <div className="grid grid-cols-1 gap-sm mb-xl">
-            {[
-              { i: "magic_button", t: "Enhance Clarity", d: "Improve tone and flow", c: "bg-secondary/10 text-secondary", h: "hover:bg-secondary" },
-              { i: "rule_folder", t: "Apply ABNT/APA", d: "Format citations automatically", c: "bg-on-tertiary-container/10 text-on-tertiary-container", h: "hover:bg-on-tertiary-container" },
-              { i: "fact_check", t: "Verify Facts", d: "Scan for contradictions", c: "bg-error/10 text-error", h: "hover:bg-error" },
-            ].map((a) => (
-              <button key={a.t} className="flex items-center gap-md p-md bg-surface-container-lowest border border-outline-variant/10 rounded-xl hover:bg-surface-variant transition-all text-left group">
-                <div className={`${a.c} p-sm rounded-lg ${a.h} group-hover:text-white transition-colors`}>
-                  <Icon name={a.i} className="text-[20px]" />
-                </div>
-                <div>
-                  <p className="font-label-md text-primary">{a.t}</p>
-                  <p className="text-[11px] text-on-surface-variant/70">{a.d}</p>
-                </div>
-              </button>
-            ))}
-          </div>
-          <div className="flex-1 overflow-hidden flex flex-col">
-            <div className="flex-1 overflow-y-auto custom-scrollbar space-y-md pr-xs mb-md">
-              <div className="flex gap-sm">
-                <div className="w-8 h-8 rounded-full bg-primary flex items-center justify-center flex-shrink-0">
-                  <Icon name="smart_toy" className="text-white text-[16px]" />
-                </div>
-                <div className="bg-surface-container-high p-md rounded-2xl rounded-tl-none">
-                  <p className="text-[13px] text-primary leading-tight">I've noticed you're discussing "cognitive offloading". I found 3 recent papers from 2023 that could strengthen your argument. Would you like to see the abstracts?</p>
-                </div>
-              </div>
-              <div className="flex flex-wrap gap-xs ml-10">
-                {["Show abstracts", "Find related authors"].map((c) => (
-                  <span key={c} className="px-sm py-xs bg-surface-container-lowest border border-outline-variant/30 rounded-full text-[11px] text-on-surface-variant cursor-pointer hover:border-secondary transition-colors">{c}</span>
-                ))}
-              </div>
-            </div>
-            <div className="relative mt-auto">
-              <textarea className="w-full bg-surface-container-lowest border border-outline-variant/30 rounded-2xl p-md pr-12 focus:ring-2 focus:ring-secondary/20 focus:border-secondary outline-none resize-none text-[13px] custom-scrollbar" placeholder="Ask AI anything..." rows={2}></textarea>
-              <button className="absolute right-md bottom-md text-secondary hover:scale-110 transition-transform">
-                <Icon name="send" />
-              </button>
-            </div>
-          </div>
+      <CopilotPanel
+        open={copilotOpen}
+        onClose={handleCopilotClose}
+        selectedText={selectedText}
+        className="hidden lg:flex"
+      />
+
+      {/* Mobile: drawer do copiloto */}
+      {copilotOpen && (
+        <div className="lg:hidden fixed inset-0 z-50 flex justify-end">
+          <button
+            type="button"
+            className="absolute inset-0 bg-black/60 backdrop-blur-sm"
+            aria-label="Fechar copiloto"
+            onClick={handleCopilotClose}
+          />
+          <CopilotPanel
+            open
+            onClose={handleCopilotClose}
+            selectedText={selectedText}
+            className="relative z-10 h-full w-[min(100%,320px)] shadow-2xl"
+          />
         </div>
-      </aside>
+      )}
+
+      <button
+        type="button"
+        onClick={handleCopilotOpen}
+        className={`fixed bottom-20 right-6 z-30 w-14 h-14 rounded-2xl bg-primary text-on-primary flex items-center justify-center logo-glow print:hidden transition-transform ${
+          copilotOpen ? "lg:scale-0 lg:pointer-events-none" : "scale-100"
+        }`}
+        aria-label="Abrir copiloto IA"
+        title="Copiloto IA"
+      >
+        <Icon name="auto_awesome" fill size={26} />
+      </button>
     </div>
   );
 }

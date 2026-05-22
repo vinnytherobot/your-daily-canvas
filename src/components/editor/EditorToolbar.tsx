@@ -1,5 +1,14 @@
 import type { Editor } from "@tiptap/react";
 import { Icon } from "../Icon";
+import { useState } from "react";
+
+// Mock library data - in a real app, this would come from a service or context
+const mockLibrary = [
+  { title: "A ética da inteligência artificial na educação superior", author: "Silva, M. A.", year: "2024", type: "Artigo", format: "ABNT" },
+  { title: "Metodologias mistas em pesquisa aplicada", author: "Creswell, J. W.", year: "2018", type: "Livro", format: "APA" },
+  { title: "Escrita acadêmica e produtividade digital", author: "Oliveira, P. R.", year: "2023", type: "Capítulo", format: "ABNT" },
+  { title: "Normas técnicas para trabalhos de conclusão", author: "NBR 14724", year: "2022", type: "Norma", format: "ABNT" },
+];
 
 type EditorToolbarProps = {
   editor: Editor | null;
@@ -34,6 +43,8 @@ function ToolbarButton({
 
 export function EditorToolbar({ editor }: EditorToolbarProps) {
   if (!editor) return null;
+  const [showCitationPicker, setShowCitationPicker] = useState(false);
+  const [selectedReference, setSelectedReference] = useState<typeof mockLibrary[0] | null>(null);
 
   const setLink = () => {
     const prev = editor.getAttributes("link").href as string | undefined;
@@ -60,6 +71,22 @@ export function EditorToolbar({ editor }: EditorToolbarProps) {
     }
     const level = Number(value.replace("h", "")) as 1 | 2 | 3;
     editor.chain().focus().toggleHeading({ level }).run();
+  };
+
+  const insertCitation = () => {
+    if (!selectedReference) return;
+
+    // Format citation in ABNT style (author, year)
+    const citationText = `(${selectedReference.author.split(',')[0].trim()}, ${selectedReference.year})`;
+
+    // Insert at current cursor position
+    editor.chain().focus().insertContent({
+      type: "text",
+      text: citationText
+    }).run();
+
+    setShowCitationPicker(false);
+    setSelectedReference(null);
   };
 
   return (
@@ -171,7 +198,57 @@ export function EditorToolbar({ editor }: EditorToolbarProps) {
             onClick={() => editor.chain().focus().unsetLink().run()}
           />
         )}
+        <ToolbarButton
+          label="Inserir citação"
+          icon="format_quote"
+          onClick={() => setShowCitationPicker(true)}
+        />
       </div>
+
+      {/* Citation Picker Modal */}
+      {showCitationPicker && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 backdrop-blur">
+          <div className="bg-white/95 backdrop-blur-sm rounded-2xl p-6 w-[320px] max-h-[80vh] overflow-y-auto">
+            <h3 className="font-label-md font-bold mb-4 text-primary">Selecione uma referência</h3>
+
+            <div className="space-y-3">
+              {mockLibrary.map((ref, index) => (
+                <div
+                  key={index}
+                  className={`p-3 rounded-lg border ${selectedReference === ref ? "border-primary" : "border-white/20"} hover:border-white/10 cursor-pointer transition-all`}
+                  onClick={() => setSelectedReference(ref)}
+                >
+                  <div className="flex justify-between items-start">
+                    <div>
+                      <p className="font-label-sm font-semibold">{ref.title}</p>
+                      <p className="text-xs text-on-surface-variant">{ref.author} · {ref.year} · {ref.type}</p>
+                    </div>
+                    {selectedReference === ref && (
+                      <Icon name="check_circle" size={20} className="text-primary" />
+                    )}
+                  </div>
+                </div>
+              ))}
+            </div>
+
+            <div className="mt-4 pt-3 border-t border-white/10">
+              <button
+                onClick={insertCitation}
+                disabled={!selectedReference}
+                className={`w-full btn-${selectedReference ? "primary" : "ghost"} px-md py-2.5 font-label-md flex items-center justify-center gap-sm`}
+              >
+                {selectedReference ? <><Icon name="content_copy" size={18} /> Inserir citação</> : "Selecione uma referência"}
+              </button>
+              <button
+                onClick={() => setShowCitationPicker(false)}
+                className="w-full mt-2 btn-ghost px-md py-2 font-label-sm flex items-center justify-center gap-sm"
+              >
+                <Icon name="close" size={18} /> Cancelar
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   );
 }

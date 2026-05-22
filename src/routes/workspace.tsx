@@ -10,6 +10,7 @@ import {
   type OutlineItem,
   scrollToOutlineItem,
 } from "../lib/document-outline";
+import { loadDocument, loadVersions, restoreVersion } from "../lib/editor-storage";
 
 const COPILOT_OPEN_KEY = "thesius:copilot-open";
 
@@ -107,7 +108,112 @@ function Workspace() {
   const activeOutline = outline.find((o) => o.id === activeOutlineId);
   const breadcrumbSection = activeOutline?.title ?? "Documento";
 
-  const handleExportPdf = () => window.print();
+  const [exportFormat, setExportFormat] = useState("ABNT");
+  const [showExportOptions, setShowExportOptions] = useState(false);
+  const [showVersionHistory, setShowVersionHistory] = useState(false);
+  const [versions, setVersions] = useState<Array<{
+    html: string;
+    timestamp: number;
+    date: string;
+    wordCount: number;
+  }>>([]);
+
+  const handleExportPdf = () => {
+    // In a real implementation, this would generate a properly formatted PDF
+    // For now, we'll enhance the print functionality with academic formatting hints
+    setShowExportOptions(true);
+  };
+
+  const handleVersionHistory = () => {
+    const savedVersions = loadVersions();
+    setVersions(savedVersions);
+    setShowVersionHistory(true);
+  };
+
+  const handleRestoreVersion = (timestamp: number) => {
+    restoreVersion(timestamp);
+    // Refresh the editor content
+    if (editorRef.current) {
+      editorRef.current.commands.setContent(loadDocument(), { emitUpdate: false });
+    }
+    setShowVersionHistory(false);
+  };
+
+  const handleExport = async (format: string) => {
+    setExportFormat(format);
+    setShowExportOptions(false);
+
+    // Here we would normally generate a formatted PDF
+    // For demonstration, we'll trigger print with enhanced styling
+    window.print();
+  };
+
+  const getFormattedContent = (content: string): string => {
+    // Apply formatting rules based on selected format
+    switch (exportFormat) {
+      case "ABNT":
+        return applyABNTFormatting(content);
+      case "APA":
+        return applyAPAFormatting(content);
+      case "Vancouver":
+        return applyVancouverFormatting(content);
+      default:
+        return content;
+    }
+  };
+
+  const applyABNTFormatting = (content: string): string => {
+    // Simulate ABNT formatting rules
+    return `
+<div class="abnt-document">
+  <h1 style="text-align: center; font-size: 16pt; font-weight: bold;">
+    TRABALHO ACADÊMICO
+  </h1>
+  <p style="text-indent: 1.25cm; line-height: 1.5; font-size: 12pt; text-align: justify;">
+    ${content}
+  </p>
+  <hr style="margin: 2cm 0; border-top: 1px solid black;">
+  <p style="font-size: 10pt; text-align: center;">
+    Documento formatado segundo normas ABNT - ${new Date().getFullYear()}
+  </p>
+</div>
+`;
+  };
+
+  const applyAPAFormatting = (content: string): string => {
+    // Simulate APA formatting rules
+    return `
+<div class="apa-document">
+  <h1 style="text-align: center; font-size: 14pt; font-weight: bold;">
+    ACADEMIC PAPER
+  </h1>
+  <p style="margin-top: 2cm; line-height: 2; font-size: 12pt; text-align: left;">
+    ${content}
+  </p>
+  <p style="font-size: 10pt; text-align: right;">
+    Formatted according to APA 7th Edition - ${new Date().getFullYear()}
+  </p>
+</div>
+`;
+  };
+
+  const applyVancouverFormatting = (content: string): string => {
+    // Simulate Vancouver formatting rules
+    return `
+<div class="vancouver-document">
+  <h1 style="text-align: center; font-size: 14pt; font-weight: bold; text-transform: uppercase;">
+    SCIENTIFIC PAPER
+  </h1>
+  <p style="margin-top: 1.5cm; line-height: 1.5; font-size: 11pt; text-align: justify;">
+    ${content}
+  </p>
+  <hr style="margin: 1.5cm 0; border-top: 0.5pt solid black;">
+  <p style="font-size: 9pt; text-align: center;">
+    Vancouver Style - ${new Date().getFullYear()}
+  </p>
+</div>
+`;
+  };
 
   return (
     <div className="flex h-screen w-full overflow-hidden bg-background font-body-md text-on-surface relative z-10 print:block print:h-auto print:overflow-visible">
@@ -211,9 +317,67 @@ function Workspace() {
             <button type="button" className="p-2 text-on-surface-variant hover:text-primary rounded-lg hover:bg-white/5" aria-label="Compartilhar">
               <Icon name="share" size={22} />
             </button>
-            <button type="button" onClick={handleExportPdf} className="btn-primary px-md py-2 rounded-xl font-label-sm whitespace-nowrap">
-              Exportar PDF
-            </button>
+            <div className="relative">
+              <button type="button" onClick={handleExportPdf} className="btn-primary px-md py-2 rounded-xl font-label-sm whitespace-nowrap">
+                Exportar PDF
+              </button>
+              <button type="button" onClick={handleVersionHistory} className="btn-ghost px-md py-2 rounded-xl font-label-sm whitespace-nowrap ml-2">
+                <Icon name="history" size={20} /> Versões
+              </button>
+            </div>
+
+            {/* Export Options Modal */}
+            {showExportOptions && (
+              <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 backdrop-blur-sm">
+                <div className="surface-glass rounded-2xl p-6 w-[280px] border border-white/10 animate-scale-in text-on-surface">
+                  <h3 className="font-label-md font-bold mb-4 text-primary">Formato de exportação</h3>
+
+                  <div className="space-y-3">
+                    <button
+                      onClick={() => handleExport("ABNT")}
+                      className="w-full text-left px-3 py-2 rounded-lg border border-white/20 hover:border-primary/30 hover:bg-white/10 transition-colors flex items-center gap-3 antigravity-card-hover"
+                    >
+                      <Icon name="description" size={20} className="text-primary" />
+                      <div>
+                        <p className="font-label-sm">ABNT</p>
+                        <p className="text-xs text-on-surface-variant">Norma Brasileira</p>
+                      </div>
+                    </button>
+
+                    <button
+                      onClick={() => handleExport("APA")}
+                      className="w-full text-left px-3 py-2 rounded-lg border border-white/20 hover:border-primary/30 hover:bg-white/10 transition-colors flex items-center gap-3 antigravity-card-hover"
+                    >
+                      <Icon name="description" size={20} className="text-primary" />
+                      <div>
+                        <p className="font-label-sm">APA</p>
+                        <p className="text-xs text-on-surface-variant">American Psychological Association</p>
+                      </div>
+                    </button>
+
+                    <button
+                      onClick={() => handleExport("Vancouver")}
+                      className="w-full text-left px-3 py-2 rounded-lg border border-white/20 hover:border-primary/30 hover:bg-white/10 transition-colors flex items-center gap-3 antigravity-card-hover"
+                    >
+                      <Icon name="description" size={20} className="text-primary" />
+                      <div>
+                        <p className="font-label-sm">Vancouver</p>
+                        <p className="text-xs text-on-surface-variant">Estilo Vancouver</p>
+                      </div>
+                    </button>
+                  </div>
+
+                  <div className="mt-4 pt-3 border-t border-white/10">
+                    <button
+                      onClick={() => setShowExportOptions(false)}
+                      className="w-full btn-ghost px-md py-2 font-label-sm flex items-center justify-center gap-sm"
+                    >
+                      <Icon name="close" size={18} /> Cancelar
+                    </button>
+                  </div>
+                </div>
+              </div>
+            )}
           </div>
         </header>
 
@@ -240,7 +404,7 @@ function Workspace() {
           </div>
         </div>
 
-        <div className="absolute bottom-md left-1/2 -translate-x-1/2 z-20 flex items-center gap-md glass-panel px-lg py-sm rounded-full border border-white/10 shadow-lg max-w-[calc(100%-2rem)] print:hidden">
+        <div className="absolute bottom-md left-1/2 -translate-x-1/2 z-20 flex items-center gap-md glass-panel px-lg py-sm rounded-full border border-white/10 shadow-lg max-w-[calc(100%-2rem)] print:hidden animate-fade-in-up">
           <div className="flex items-center gap-xs shrink-0">
             <span className={`w-2 h-2 rounded-full ${stats.saved ? "status-dot" : "bg-amber-400 animate-pulse"}`} />
             <span className="font-label-sm text-on-surface-variant whitespace-nowrap">
@@ -280,6 +444,64 @@ function Workspace() {
             selectedText={selectedText}
             className="relative z-10 h-full w-[min(100%,320px)] shadow-2xl"
           />
+        </div>
+      )}
+
+      {/* Version History Modal */}
+      {showVersionHistory && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 backdrop-blur-sm">
+          <div className="surface-glass rounded-2xl p-6 w-[400px] max-h-[80vh] overflow-y-auto border border-white/10 animate-scale-in text-on-surface">
+            <div className="flex justify-between items-start mb-4">
+              <h3 className="font-label-md font-bold text-primary">Histórico de versões</h3>
+              <button
+                onClick={() => setShowVersionHistory(false)}
+                className="p-1 rounded-lg hover:bg-white/10"
+              >
+                <Icon name="close" size={20} />
+              </button>
+            </div>
+
+            {versions.length === 0 ? (
+              <p className="text-center text-on-surface-variant py-8">Nenhuma versão encontrada.</p>
+            ) : (
+              <div className="space-y-3">
+                {versions.map((version, index) => {
+                  const date = new Date(version.timestamp);
+                  const timeString = date.toLocaleTimeString('pt-BR', { hour: '2-digit', minute: '2-digit' });
+                  const dateString = date.toLocaleDateString('pt-BR', { day: '2-digit', month: '2-digit', year: 'numeric' });
+
+                  return (
+                    <div
+                      key={index}
+                      className="p-3 rounded-lg border border-white/20 hover:border-primary/30 hover:bg-white/10 cursor-pointer transition-all antigravity-card-hover"
+                      onClick={() => handleRestoreVersion(version.timestamp)}
+                    >
+                      <div className="flex justify-between items-start">
+                        <div>
+                          <p className="font-label-sm font-semibold">
+                            Versão {index + 1}
+                          </p>
+                          <p className="text-xs text-on-surface-variant">
+                            {dateString} às {timeString} • {version.wordCount.toLocaleString()} palavras
+                          </p>
+                        </div>
+                        <Icon name="restore" size={20} className="text-primary" />
+                      </div>
+                    </div>
+                  );
+                })}
+              </div>
+            )}
+
+            <div className="mt-4 pt-3 border-t border-white/10">
+              <button
+                onClick={() => setShowVersionHistory(false)}
+                className="w-full btn-ghost px-md py-2 font-label-sm flex items-center justify-center gap-sm"
+              >
+                <Icon name="close" size={18} /> Fechar
+              </button>
+            </div>
+          </div>
         </div>
       )}
 

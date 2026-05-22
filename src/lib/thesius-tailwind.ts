@@ -417,6 +417,7 @@ export const thesiusGlobalCss = `
   .reveal {
     opacity: 0;
     transform: translateY(32px);
+    will-change: transform, opacity;
     transition: opacity 0.8s cubic-bezier(0.16, 1, 0.3, 1), transform 0.8s cubic-bezier(0.16, 1, 0.3, 1);
   }
   .reveal.visible {
@@ -426,11 +427,63 @@ export const thesiusGlobalCss = `
   .reveal-scale {
     opacity: 0;
     transform: scale(0.95);
+    will-change: transform, opacity;
     transition: opacity 0.7s ease, transform 0.7s cubic-bezier(0.16, 1, 0.3, 1);
   }
   .reveal-scale.visible {
     opacity: 1;
     transform: scale(1);
+  }
+
+  /* ━━ Antigravity Vibe Animations ━━ */
+  .antigravity-card-hover {
+    transition: transform 0.4s cubic-bezier(0.16, 1, 0.3, 1), box-shadow 0.4s cubic-bezier(0.16, 1, 0.3, 1), border-color 0.3s;
+    transform-style: preserve-3d;
+    perspective: 1000px;
+    will-change: transform, box-shadow;
+  }
+  .antigravity-card-hover:hover {
+    transform: translateY(-8px) rotateX(2.5deg) rotateY(-1deg) scale(1.015);
+    border-color: rgba(201, 169, 98, 0.3);
+    box-shadow: 0 25px 50px rgba(0, 0, 0, 0.5), 0 0 0 1px rgba(201, 169, 98, 0.12);
+  }
+  .antigravity-card-inner {
+    transform: translateZ(24px);
+    transition: transform 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+  }
+
+  .floating-element {
+    animation: floatUpDown 7s ease-in-out infinite;
+    will-change: transform;
+  }
+  .floating-element-delayed {
+    animation: floatUpDownDelayed 8.5s ease-in-out infinite;
+    will-change: transform;
+  }
+
+  @keyframes floatUpDown {
+    0%, 100% { transform: translateY(0) rotate(0.5deg); }
+    50% { transform: translateY(-10px) rotate(-0.5deg); }
+  }
+  @keyframes floatUpDownDelayed {
+    0%, 100% { transform: translateY(0) rotate(-0.5deg); }
+    50% { transform: translateY(-8px) rotate(0.5deg); }
+  }
+
+  /* Staggered reveals */
+  .reveal-delay-1 { transition-delay: 0.06s; }
+  .reveal-delay-2 { transition-delay: 0.12s; }
+  .reveal-delay-3 { transition-delay: 0.18s; }
+  .reveal-delay-4 { transition-delay: 0.24s; }
+  .reveal-delay-5 { transition-delay: 0.30s; }
+  .reveal-delay-6 { transition-delay: 0.36s; }
+
+  @media (prefers-reduced-motion: reduce) {
+    .reveal, .reveal-scale, .antigravity-card-hover, .floating-element, .floating-element-delayed, .btn-primary, .saas-feature-card, .saas-step, .thesius-card {
+      animation: none !important;
+      transition: none !important;
+      transform: none !important;
+    }
   }
 
   /* ━━ Enhanced Button Shine ━━ */

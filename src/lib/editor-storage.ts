@@ -1,4 +1,6 @@
 export const STORAGE_KEY = "thesius:document:methodology";
+export const VERSION_STORAGE_KEY = "thesius:document:versions";
+export const MAX_VERSIONS = 20;
 
 export const DEFAULT_DOCUMENT_HTML = `
 <h1>2. Metodologia abrangente</h1>
@@ -28,9 +30,99 @@ export function loadDocument(): string {
 export function saveDocument(html: string): void {
   if (typeof window === "undefined") return;
   try {
+    // Save current version
     localStorage.setItem(STORAGE_KEY, html);
+
+    // Save version history
+    const versionKey = `${VERSION_STORAGE_KEY}:${Date.now()}`;
+    const versionData = {
+      html: html,
+      timestamp: Date.now(),
+      date: new Date().toISOString(),
+      wordCount: countWords(html.replace(/<[^>]*>/g, ''))
+    };
+
+    localStorage.setItem(versionKey, JSON.stringify(versionData));
+
+    // Maintain only MAX_VERSIONS versions
+    pruneOldVersions();
   } catch {
     /* quota exceeded — ignore */
+  }
+}
+
+export function loadVersions(): Array<{
+  html: string;
+  timestamp: number;
+  date: string;
+  wordCount: number;
+}> {
+  if (typeof window === "undefined") return [];
+
+  try {
+    const keys = Object.keys(localStorage);
+    const versionKeys = keys.filter(key => key.startsWith(`${VERSION_STORAGE_KEY}:`));
+
+    const versions = versionKeys
+      .map(key => {
+        try {
+          const data = localStorage.getItem(key);
+          return data ? JSON.parse(data) : null;
+        } catch {
+          return null;
+        }
+      })
+      .filter((v): v is { html: string; timestamp: number; date: string; wordCount: number } => v !== null)
+      .sort((a, b) => b.timestamp - a.timestamp); // Newest first
+
+    return versions;
+  } catch {
+    return [];
+  }
+}
+
+export function pruneOldVersions(): void {
+  if (typeof window === "undefined") return;
+
+  try {
+    const keys = Object.keys(localStorage);
+    const versionKeys = keys.filter(key => key.startsWith(`${VERSION_STORAGE_KEY}:`));
+
+    if (versionKeys.length <= MAX_VERSIONS) return;
+
+    // Sort by timestamp (oldest first)
+    const sortedKeys = versionKeys
+      .map(key => ({
+        key,
+        timestamp: parseInt(key.split(":")[2] || "0")
+      }))
+      .sort((a, b) => a.timestamp - b.timestamp);
+
+    // Remove oldest versions exceeding MAX_VERSIONS
+    const versionsToRemove = sortedKeys.slice(0, sortedKeys.length - MAX_VERSIONS);
+    versionsToRemove.forEach(({ key }) => {
+      localStorage.removeItem(key);
+    });
+  } catch {
+    /* ignore errors */
+  }
+}
+
+export function restoreVersion(timestamp: number): void {
+  if (typeof window === "undefined") return;
+
+  try {
+    const versionKey = `${VERSION_STORAGE_KEY}:${timestamp}`;
+    const versionData = localStorage.getItem(versionKey);
+
+    if (versionData) {
+      const parsed = JSON.parse(versionData);
+      if (parsed && parsed.html) {
+        localStorage.setItem(STORAGE_KEY, parsed.html);
+      }
+    }
+  } catch {
+    /* ignore errors */
   }
 }
 

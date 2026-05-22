@@ -29,10 +29,18 @@ function Dashboard() {
         />
 
         <section className="grid grid-cols-2 lg:grid-cols-4 gap-gutter">
-          <StatCard label="Palavras escritas" value="12.4k" hint="+1.8k" icon="article" accent="gold" />
-          <StatCard label="Score ABNT" value="96%" hint="1 aviso" icon="verified" accent="success" />
-          <StatCard label="Referências" value="47" hint="Válidas" icon="menu_book" accent="gold" />
-          <StatCard label="Tokens IA" value="32k" hint="de 50k" icon="auto_awesome" accent="muted" />
+          <div className="reveal animate-fade-in-up reveal-delay-1">
+            <StatCard label="Palavras escritas" value="12.4k" hint="+1.8k" icon="article" accent="gold" />
+          </div>
+          <div className="reveal animate-fade-in-up reveal-delay-2">
+            <StatCard label="Score ABNT" value="96%" hint="1 aviso" icon="verified" accent="success" />
+          </div>
+          <div className="reveal animate-fade-in-up reveal-delay-3">
+            <StatCard label="Referências" value="47" hint="Válidas" icon="menu_book" accent="gold" />
+          </div>
+          <div className="reveal animate-fade-in-up reveal-delay-4">
+            <StatCard label="Tokens IA" value="32k" hint="de 50k" icon="auto_awesome" accent="muted" />
+          </div>
         </section>
 
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-gutter">
@@ -44,24 +52,28 @@ function Dashboard() {
               </button>
             </div>
             <div className="grid grid-cols-1 md:grid-cols-2 gap-md">
-              <ProjectCard
-                icon="school"
-                tag="TCC"
-                status="Em andamento"
-                title="Impacto da IA na produtividade acadêmica"
-                desc="Capítulo 2 (Metodologia) em revisão pela IA."
-                progress={72}
-                edited="Há 2h"
-              />
-              <ProjectCard
-                icon="article"
-                tag="Artigo"
-                status="Qualis B1"
-                title="Ética e autoria em modelos generativos"
-                desc="Introdução e referências concluídas."
-                progress={45}
-                edited="Ontem"
-              />
+              <div className="reveal animate-fade-in-up reveal-delay-2">
+                <ProjectCard
+                  icon="school"
+                  tag="TCC"
+                  status="Em andamento"
+                  title="Impacto da IA na produtividade acadêmica"
+                  desc="Capítulo 2 (Metodologia) em revisão pela IA."
+                  progress={72}
+                  edited="Há 2h"
+                />
+              </div>
+              <div className="reveal animate-fade-in-up reveal-delay-3">
+                <ProjectCard
+                  icon="article"
+                  tag="Artigo"
+                  status="Qualis B1"
+                  title="Ética e autoria em modelos generativos"
+                  desc="Introdução e referências concluídas."
+                  progress={45}
+                  edited="Ontem"
+                />
+              </div>
             </div>
 
             <div className="grid grid-cols-1 sm:grid-cols-3 gap-md">
@@ -69,8 +81,8 @@ function Dashboard() {
                 { icon: "upload_file", t: "Importar DOCX/PDF", d: "Autoformatação" },
                 { icon: "format_list_bulleted", t: "Aplicar ABNT", d: "Um clique" },
                 { icon: "download", t: "Exportar", d: "DOCX ou PDF" },
-              ].map((a) => (
-                <Link key={a.t} to="/workspace" className="thesius-card p-md flex items-center gap-md group">
+              ].map((a, i) => (
+                <Link key={a.t} to="/workspace" className={`thesius-card p-md flex items-center gap-md group reveal reveal-delay-${i + 1} antigravity-card-hover`}>
                   <div className="w-11 h-11 rounded-xl bg-primary/10 flex items-center justify-center text-primary group-hover:bg-primary group-hover:text-on-primary transition-colors">
                     <Icon name={a.icon} size={22} />
                   </div>
@@ -84,7 +96,7 @@ function Dashboard() {
           </div>
 
           <div className="space-y-md">
-            <div className="thesius-card p-lg">
+            <div className="thesius-card p-lg reveal reveal-delay-1">
               <h3 className="font-label-md font-semibold text-on-surface mb-lg flex items-center gap-sm">
                 <Icon name="schedule" size={20} className="text-primary" /> Atividade recente
               </h3>
@@ -105,7 +117,7 @@ function Dashboard() {
               </ul>
             </div>
 
-            <div className="thesius-card p-lg border-primary/20">
+            <div className="thesius-card p-lg border-primary/20 reveal reveal-delay-2 floating-element">
               <div className="flex items-center gap-sm mb-md">
                 <div className="w-9 h-9 rounded-lg bg-primary/15 flex items-center justify-center">
                   <Icon name="auto_awesome" className="text-primary" fill size={20} />
@@ -120,7 +132,7 @@ function Dashboard() {
               </Link>
             </div>
 
-            <div className="rounded-2xl p-lg bg-gradient-to-br from-primary/20 via-primary/5 to-transparent border border-primary/25">
+            <div className="rounded-2xl p-lg bg-gradient-to-br from-primary/20 via-primary/5 to-transparent border border-primary/25 reveal reveal-delay-3 floating-element-delayed">
               <p className="section-eyebrow mb-xs">Upgrade</p>
               <p className="text-sm text-on-surface mb-md">IA ilimitada e colaboração em tempo real.</p>
               <button type="button" className="text-sm font-semibold text-primary hover:underline">
@@ -152,7 +164,7 @@ function ProjectCard({
   edited: string;
 }) {
   return (
-    <Link to="/workspace" className="thesius-card p-lg block group">
+    <Link to="/workspace" className="thesius-card p-lg block group antigravity-card-hover">
       <div className="flex justify-between items-start mb-md">
         <div className="w-11 h-11 rounded-xl bg-primary/10 flex items-center justify-center text-primary group-hover:bg-primary group-hover:text-on-primary transition-colors">
           <Icon name={icon} size={24} />

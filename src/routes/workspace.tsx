@@ -2,6 +2,8 @@ import { createFileRoute, Link, useRouterState } from "@tanstack/react-router";
 import type { Editor } from "@tiptap/react";
 import { useCallback, useEffect, useRef, useState } from "react";
 import { Icon } from "../components/Icon";
+import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
 import { Logo } from "../components/Logo";
 import { AcademicEditor, type EditorStats } from "../components/editor/AcademicEditor";
 import { DocumentOutline } from "../components/workspace/DocumentOutline";
@@ -11,10 +13,14 @@ import {
   scrollToOutlineItem,
 } from "../lib/document-outline";
 import { loadDocument, loadVersions, restoreVersion } from "../lib/editor-storage";
+import { requireAuthOrRedirect } from "../lib/auth";
 
 const COPILOT_OPEN_KEY = "thesius:copilot-open";
 
 export const Route = createFileRoute("/workspace")({
+  beforeLoad: ({ location }) => {
+    requireAuthOrRedirect(location.pathname);
+  },
   head: () => ({ meta: [{ title: "Thesius | Editor" }] }),
   component: Workspace,
 });
@@ -223,9 +229,9 @@ function Workspace() {
             <Logo size={40} className="logo-glow transition-transform group-hover:scale-105" />
             <h1 className="font-headline-md font-bold text-primary">Thesius</h1>
           </Link>
-          <button type="button" className="btn-primary w-full py-2.5 rounded-xl font-label-md flex items-center justify-center gap-sm mb-lg shrink-0">
+          <Button type="button" className="btn-primary w-full py-2.5 rounded-xl font-label-md flex items-center justify-center gap-sm mb-lg shrink-0">
             <Icon name="add" size={20} /> Novo projeto
-          </button>
+          </Button>
           <nav className="space-y-1 shrink-0">
             <Link
               to="/dashboard"
@@ -264,7 +270,7 @@ function Workspace() {
             </div>
           </div>
         </div>
-        <div className="p-lg border-t border-white/6 shrink-0">
+        <div className="p-lg border-t border-white/[0.06] shrink-0">
           <div className="flex items-center gap-md min-w-0">
             <img
               alt=""
@@ -275,19 +281,19 @@ function Workspace() {
               <p className="font-label-md text-primary font-bold truncate">Marina Costa</p>
               <p className="font-label-sm text-on-surface-variant/60 truncate">Plano Pro</p>
             </div>
-            <button type="button" className="shrink-0 p-1 rounded-lg hover:bg-white/5" aria-label="Configurações">
+            <Button type="button" className="shrink-0 p-1 rounded-lg hover:bg-white/5" aria-label="Configurações">
               <Icon name="settings" className="text-on-surface-variant" size={22} />
-            </button>
+            </Button>
           </div>
         </div>
       </aside>
 
       <main className="flex-1 flex flex-col min-w-0 bg-background overflow-hidden relative print:overflow-visible">
-        <header className="h-[72px] flex items-center justify-between gap-md px-lg md:px-xl border-b border-white/6 surface-glass sticky top-0 z-20 shrink-0 print:hidden">
+        <header className="h-[72px] flex items-center justify-between gap-md px-lg md:px-xl border-b border-white/[0.06] surface-glass sticky top-0 z-20 shrink-0 print:hidden">
           <div className="flex items-center gap-md min-w-0 flex-1">
-            <div className="flex items-center gap-sm bg-white/4 rounded-full px-md py-1.5 border border-white/8 min-w-0 max-w-sm flex-1">
+            <div className="flex items-center gap-sm bg-white/[0.04] rounded-full px-md py-1.5 border border-white/[0.08] min-w-0 max-w-sm flex-1">
               <Icon name="search" className="text-on-surface-variant shrink-0" size={18} />
-              <input
+              <Input
                 className="bg-transparent border-none focus:ring-0 text-sm w-full min-w-0 outline-none placeholder:text-on-surface-variant/50"
                 placeholder="Buscar no documento..."
                 type="search"
@@ -301,7 +307,7 @@ function Workspace() {
           </div>
           <div className="flex items-center gap-sm shrink-0">
             {!copilotOpen && (
-              <button
+              <Button
                 type="button"
                 onClick={handleCopilotOpen}
                 className="hidden lg:flex items-center gap-sm btn-ghost px-md py-2 rounded-xl font-label-sm"
@@ -309,21 +315,21 @@ function Workspace() {
               >
                 <Icon name="auto_awesome" size={20} className="text-primary" />
                 Copiloto IA
-              </button>
+              </Button>
             )}
-            <button type="button" className="p-2 text-on-surface-variant hover:text-primary rounded-lg hover:bg-white/5" aria-label="Histórico">
+            <Button type="button" className="p-2 text-on-surface-variant hover:text-primary rounded-lg hover:bg-white/5" aria-label="Histórico">
               <Icon name="history" size={22} />
-            </button>
-            <button type="button" className="p-2 text-on-surface-variant hover:text-primary rounded-lg hover:bg-white/5" aria-label="Compartilhar">
+            </Button>
+            <Button type="button" className="p-2 text-on-surface-variant hover:text-primary rounded-lg hover:bg-white/5" aria-label="Compartilhar">
               <Icon name="share" size={22} />
-            </button>
+            </Button>
             <div className="relative">
-              <button type="button" onClick={handleExportPdf} className="btn-primary px-md py-2 rounded-xl font-label-sm whitespace-nowrap">
+              <Button type="button" onClick={handleExportPdf} className="btn-primary px-md py-2 rounded-xl font-label-sm whitespace-nowrap">
                 Exportar PDF
-              </button>
-              <button type="button" onClick={handleVersionHistory} className="btn-ghost px-md py-2 rounded-xl font-label-sm whitespace-nowrap ml-2">
+              </Button>
+              <Button type="button" onClick={handleVersionHistory} className="btn-ghost px-md py-2 rounded-xl font-label-sm whitespace-nowrap ml-2">
                 <Icon name="history" size={20} /> Versões
-              </button>
+              </Button>
             </div>
 
             {/* Export Options Modal */}
@@ -333,7 +339,7 @@ function Workspace() {
                   <h3 className="font-label-md font-bold mb-4 text-primary">Formato de exportação</h3>
 
                   <div className="space-y-3">
-                    <button
+                    <Button
                       onClick={() => handleExport("ABNT")}
                       className="w-full text-left px-3 py-2 rounded-lg border border-white/20 hover:border-primary/30 hover:bg-white/10 transition-colors flex items-center gap-3 antigravity-card-hover"
                     >
@@ -342,9 +348,9 @@ function Workspace() {
                         <p className="font-label-sm">ABNT</p>
                         <p className="text-xs text-on-surface-variant">Norma Brasileira</p>
                       </div>
-                    </button>
+                    </Button>
 
-                    <button
+                    <Button
                       onClick={() => handleExport("APA")}
                       className="w-full text-left px-3 py-2 rounded-lg border border-white/20 hover:border-primary/30 hover:bg-white/10 transition-colors flex items-center gap-3 antigravity-card-hover"
                     >
@@ -353,9 +359,9 @@ function Workspace() {
                         <p className="font-label-sm">APA</p>
                         <p className="text-xs text-on-surface-variant">American Psychological Association</p>
                       </div>
-                    </button>
+                    </Button>
 
-                    <button
+                    <Button
                       onClick={() => handleExport("Vancouver")}
                       className="w-full text-left px-3 py-2 rounded-lg border border-white/20 hover:border-primary/30 hover:bg-white/10 transition-colors flex items-center gap-3 antigravity-card-hover"
                     >
@@ -364,16 +370,16 @@ function Workspace() {
                         <p className="font-label-sm">Vancouver</p>
                         <p className="text-xs text-on-surface-variant">Estilo Vancouver</p>
                       </div>
-                    </button>
+                    </Button>
                   </div>
 
                   <div className="mt-4 pt-3 border-t border-white/10">
-                    <button
+                    <Button
                       onClick={() => setShowExportOptions(false)}
                       className="w-full btn-ghost px-md py-2 font-label-sm flex items-center justify-center gap-sm"
                     >
                       <Icon name="close" size={18} /> Cancelar
-                    </button>
+                    </Button>
                   </div>
                 </div>
               </div>
@@ -432,7 +438,7 @@ function Workspace() {
       {/* Mobile: drawer do copiloto */}
       {copilotOpen && (
         <div className="lg:hidden fixed inset-0 z-50 flex justify-end">
-          <button
+          <Button
             type="button"
             className="absolute inset-0 bg-black/60 backdrop-blur-sm"
             aria-label="Fechar copiloto"
@@ -453,12 +459,12 @@ function Workspace() {
           <div className="surface-glass rounded-2xl p-6 w-[400px] max-h-[80vh] overflow-y-auto border border-white/10 animate-scale-in text-on-surface">
             <div className="flex justify-between items-start mb-4">
               <h3 className="font-label-md font-bold text-primary">Histórico de versões</h3>
-              <button
+              <Button
                 onClick={() => setShowVersionHistory(false)}
                 className="p-1 rounded-lg hover:bg-white/10"
               >
                 <Icon name="close" size={20} />
-              </button>
+              </Button>
             </div>
 
             {versions.length === 0 ? (
@@ -494,18 +500,18 @@ function Workspace() {
             )}
 
             <div className="mt-4 pt-3 border-t border-white/10">
-              <button
+              <Button
                 onClick={() => setShowVersionHistory(false)}
                 className="w-full btn-ghost px-md py-2 font-label-sm flex items-center justify-center gap-sm"
               >
                 <Icon name="close" size={18} /> Fechar
-              </button>
+              </Button>
             </div>
           </div>
         </div>
       )}
 
-      <button
+      <Button
         type="button"
         onClick={handleCopilotOpen}
         className={`fixed bottom-20 right-6 z-30 w-14 h-14 rounded-2xl bg-primary text-on-primary flex items-center justify-center logo-glow print:hidden transition-transform ${
@@ -515,7 +521,11 @@ function Workspace() {
         title="Copiloto IA"
       >
         <Icon name="auto_awesome" fill size={26} />
-      </button>
+      </Button>
     </div>
   );
 }
+
+
+
+

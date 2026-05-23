@@ -1,5 +1,7 @@
 import { useRef, useEffect, useState } from "react";
 import { Icon } from "../Icon";
+import { Button } from "@/components/ui/button";
+import { Textarea } from "@/components/ui/textarea";
 import type { CopilotMessage } from "../../lib/copilot";
 import { buildCopilotReply } from "../../lib/copilot";
 
@@ -63,7 +65,7 @@ export function CopilotPanel({ open, onClose, selectedText, className = "" }: Co
 
   return (
     <aside
-      className={`w-[300px] shrink-0 sidebar-elegant border-l border-white/6 flex flex-col h-full z-10 print:hidden ${className}`}
+      className={`w-[300px] shrink-0 sidebar-elegant border-l border-white/[0.06] flex flex-col h-full z-10 print:hidden ${className}`}
       aria-label="Copiloto IA"
     >
       <div className="p-lg flex flex-col h-full min-h-0">
@@ -72,7 +74,7 @@ export function CopilotPanel({ open, onClose, selectedText, className = "" }: Co
             <Icon name="bolt" className="text-primary" fill size={22} />
             Copiloto IA
           </h2>
-          <button
+          <Button
             type="button"
             onClick={onClose}
             className="p-2 rounded-lg hover:bg-white/10 text-on-surface-variant hover:text-on-surface transition-colors"
@@ -80,7 +82,7 @@ export function CopilotPanel({ open, onClose, selectedText, className = "" }: Co
             title="Fechar painel"
           >
             <Icon name="close" size={22} />
-          </button>
+          </Button>
         </div>
 
         {selectedText.length > 0 && (
@@ -92,7 +94,7 @@ export function CopilotPanel({ open, onClose, selectedText, className = "" }: Co
 
         <div className="grid grid-cols-1 gap-sm mb-md shrink-0">
           {QUICK_ACTIONS.map((a) => (
-            <button
+            <Button
               key={a.id}
               type="button"
               disabled={loading}
@@ -106,7 +108,7 @@ export function CopilotPanel({ open, onClose, selectedText, className = "" }: Co
                 <p className="font-label-md text-on-surface">{a.title}</p>
                 <p className="text-[11px] text-on-surface-variant">{a.desc}</p>
               </div>
-            </button>
+            </Button>
           ))}
         </div>
 
@@ -129,14 +131,14 @@ export function CopilotPanel({ open, onClose, selectedText, className = "" }: Co
                 {msg.chips && msg.role === "assistant" && (
                   <div className="flex flex-wrap gap-1.5 mt-sm">
                     {msg.chips.map((chip) => (
-                      <button
+                      <Button
                         key={chip}
                         type="button"
                         onClick={() => handleChip(chip)}
                         className="px-2 py-0.5 rounded-full text-[11px] border border-white/15 hover:border-primary/40 hover:text-primary transition-colors"
                       >
                         {chip}
-                      </button>
+                      </Button>
                     ))}
                   </div>
                 )}
@@ -156,7 +158,7 @@ export function CopilotPanel({ open, onClose, selectedText, className = "" }: Co
         </div>
 
         <form onSubmit={handleSubmit} className="relative shrink-0">
-          <textarea
+          <Textarea
             value={input}
             onChange={(e) => setInput(e.target.value)}
             onKeyDown={(e) => {
@@ -166,7 +168,7 @@ export function CopilotPanel({ open, onClose, selectedText, className = "" }: Co
               }
             }}
             disabled={loading}
-            className="w-full bg-white/5 border border-white/12 rounded-2xl p-md pr-12 pb-10 focus:ring-2 focus:ring-primary/30 focus:border-primary/40 outline-none resize-none text-sm text-on-surface placeholder:text-on-surface-variant/50 min-h-[88px] disabled:opacity-60"
+            className="w-full bg-white/5 border border-white/[0.12] rounded-2xl p-md pr-12 pb-10 focus:ring-2 focus:ring-primary/30 focus:border-primary/40 outline-none resize-none text-sm text-on-surface placeholder:text-on-surface-variant/50 min-h-[88px] disabled:opacity-60"
             placeholder={
               selectedText
                 ? "Pergunte sobre o trecho selecionado…"
@@ -175,16 +177,19 @@ export function CopilotPanel({ open, onClose, selectedText, className = "" }: Co
             rows={3}
             aria-label="Mensagem para o copiloto"
           />
-          <button
+          <Button
             type="submit"
             disabled={!input.trim() || loading}
             className="absolute right-3 bottom-3 p-2 rounded-xl bg-primary text-on-primary disabled:opacity-40 disabled:cursor-not-allowed hover:opacity-90 transition-opacity"
             aria-label="Enviar mensagem"
           >
             <Icon name="send" size={20} />
-          </button>
+          </Button>
         </form>
       </div>
     </aside>
   );
 }
+
+
+

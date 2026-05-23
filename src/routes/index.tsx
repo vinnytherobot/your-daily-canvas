@@ -2,8 +2,6 @@ import { createFileRoute, Link } from "@tanstack/react-router";
 import { Icon } from "../components/Icon";
 import { useState, useEffect, useRef } from "react";
 import { Logo } from "../components/Logo";
-import { PlanCard } from "../components/billing/PlanCard";
-import { PLANS } from "../lib/subscription-data";
 
 export const Route = createFileRoute("/")({
   head: () => ({
@@ -60,7 +58,7 @@ function Landing() {
 
   return (
     <div className="font-body-md text-on-surface overflow-x-hidden relative z-10">
-      <header className="top-0 sticky z-50 border-b border-white/6 surface-glass animate-fade-in">
+      <header className="top-0 sticky z-50 border-b border-white/[0.06] surface-glass animate-fade-in">
         <div className="max-w-container-max mx-auto flex justify-between items-center px-lg md:px-xl h-[72px]">
           <div className="flex items-center gap-md min-w-0">
             <Logo size={40} className="logo-glow" />
@@ -78,15 +76,15 @@ function Landing() {
             </nav>
           </div>
           <div className="flex items-center gap-md">
-            <Link to="/dashboard" className="hidden sm:inline font-label-md text-on-surface-variant hover:text-primary px-md py-2">
+            <Link to="/login" className="hidden sm:inline font-label-md text-on-surface-variant hover:text-primary px-md py-2">
               Entrar
             </Link>
-            <Link to="/dashboard" className="hidden sm:inline-block btn-primary font-label-md px-lg py-2.5 rounded-xl whitespace-nowrap">
+            <Link to="/login" className="hidden sm:inline-block btn-primary font-label-md px-lg py-2.5 rounded-xl whitespace-nowrap">
               Começar grátis
             </Link>
-            <button type="button" onClick={() => setMobileNav(true)} className="lg:hidden p-2 rounded-xl hover:bg-white/5" aria-label="Menu">
+            <Button type="button" onClick={() => setMobileNav(true)} className="lg:hidden p-2 rounded-xl hover:bg-white/5" aria-label="Menu">
               <Icon name="menu" size={26} />
-            </button>
+            </Button>
           </div>
         </div>
       </header>
@@ -94,16 +92,16 @@ function Landing() {
       {/* Mobile nav drawer */}
       {mobileNav && (
         <div className="lg:hidden">
-          <button type="button" className="mobile-nav-overlay" onClick={() => setMobileNav(false)} aria-label="Fechar menu" />
+          <Button type="button" className="mobile-nav-overlay" onClick={() => setMobileNav(false)} aria-label="Fechar menu" />
           <nav className="mobile-nav-drawer" style={{ animation: 'slideInFromRight 0.3s cubic-bezier(0.16,1,0.3,1)' }}>
             <div className="flex justify-between items-center mb-xl">
               <div className="flex items-center gap-md">
                 <Logo size={36} className="logo-glow" />
                 <span className="font-headline-md font-bold text-primary">Thesius</span>
               </div>
-              <button type="button" onClick={() => setMobileNav(false)} className="p-2 rounded-xl hover:bg-white/5" aria-label="Fechar">
+              <Button type="button" onClick={() => setMobileNav(false)} className="p-2 rounded-xl hover:bg-white/5" aria-label="Fechar">
                 <Icon name="close" size={24} />
-              </button>
+              </Button>
             </div>
             <div className="space-y-2">
               {[{ href: "#features", label: "Funcionalidades" }, { href: "#ai", label: "IA Acadêmica" }, { href: "#pricing", label: "Planos" }].map((l) => (
@@ -113,8 +111,8 @@ function Landing() {
               ))}
             </div>
             <div className="mt-xl space-y-sm">
-              <Link to="/dashboard" className="btn-primary block text-center py-3 rounded-xl font-label-md">Começar grátis</Link>
-              <Link to="/dashboard" className="btn-ghost block text-center py-3 rounded-xl font-label-md">Entrar</Link>
+              <Link to="/login" className="btn-primary block text-center py-3 rounded-xl font-label-md">Começar grátis</Link>
+              <Link to="/login" className="btn-ghost block text-center py-3 rounded-xl font-label-md">Entrar</Link>
             </div>
           </nav>
         </div>
@@ -137,7 +135,7 @@ function Landing() {
                   Crie, edite, organize e formate TCCs, monografias, dissertações e artigos científicos com IA contextual, ABNT automática e workspace completo — tudo em um só lugar.
                 </p>
                 <div className="flex flex-col sm:flex-row gap-md mb-lg animate-fade-in-up delay-4">
-                  <Link to="/dashboard" className="btn-primary font-label-md text-center px-xl py-3.5 rounded-xl">
+                  <Link to="/login" className="btn-primary font-label-md text-center px-xl py-3.5 rounded-xl">
                     Começar grátis — 14 dias Pro
                   </Link>
                   <Link to="/workspace" className="btn-ghost font-label-md text-center px-xl py-3.5 rounded-xl">
@@ -183,7 +181,7 @@ function Landing() {
         </section>
 
         {/* Social proof strip */}
-        <section className="py-lg border-y border-white/6 bg-surface-container-low/50">
+        <section className="py-lg border-y border-white/[0.06] bg-surface-container-low/50">
           <div className="max-w-container-max mx-auto px-md flex flex-wrap justify-center gap-x-xl gap-y-md items-center text-on-surface-variant font-label-sm">
             {["+12.000 estudantes", "ABNT · APA · Vancouver", "Colaboração em tempo real", "Nuvem segura"].map((t) => (
               <span key={t} className="flex items-center gap-sm"><Icon name="school" className="text-primary shrink-0" size={18} />{t}</span>
@@ -214,7 +212,7 @@ function Landing() {
         </section>
 
         {/* AI Copilot */}
-        <section className="py-xl px-md md:px-xl bg-surface-container-low/80 border-y border-white/6" id="ai">
+        <section className="py-xl px-md md:px-xl bg-surface-container-low/80 border-y border-white/[0.06]" id="ai">
           <div className="max-w-container-max mx-auto">
             <div className="grid lg:grid-cols-2 gap-xl items-center">
               <div className="reveal">
@@ -241,7 +239,7 @@ function Landing() {
                   <div className="bg-primary/10 p-md rounded-xl border border-primary/25">
                     <p className="text-xs text-primary font-bold mb-xs">Thesius IA</p>
                     <p className="text-sm text-on-surface-variant">SILVA, M. A. A ética da inteligência artificial na educação superior. Rev. Bras. Educ., v. 12, n. 3, p. 45-62, 2024.</p>
-                    <button type="button" className="mt-sm text-primary font-label-sm hover:underline">Inserir no documento →</button>
+                    <Button type="button" className="mt-sm text-primary font-label-sm hover:underline">Inserir no documento →</Button>
                   </div>
                 </div>
               </div>
@@ -299,7 +297,7 @@ function Landing() {
                 <div>
                   <h2 className="font-headline-lg text-headline-lg text-on-surface mb-md">Pronto para escalar</h2>
                   <p className="text-on-surface-variant font-body-md mb-lg max-w-md">SSO, multi-tenant, colaboração em tempo real, histórico de versões e monetização por assinatura.</p>
-                  <Link to="/dashboard" className="btn-primary inline-block font-label-md px-lg py-2.5 rounded-xl">Acessar workspace</Link>
+                  <Link to="/login" className="btn-primary inline-block font-label-md px-lg py-2.5 rounded-xl">Acessar workspace</Link>
                 </div>
                 <div className="grid grid-cols-2 gap-sm text-sm">
                   {["Autenticação SSO", "Multi-tenant", "Autosave na nuvem", "Painel institucional", "Integrações acadêmicas", "Segurança avançada", "Métricas acadêmicas", "API aberta"].map((item) => (
@@ -315,7 +313,7 @@ function Landing() {
 
         {/* Pricing */}
         {/* Testimonials */}
-        <section className="py-xl px-md border-t border-white/6">
+        <section className="py-xl px-md border-t border-white/[0.06]">
           <div className="max-w-container-max mx-auto">
             <p className="section-eyebrow text-center mb-sm reveal">Depoimentos</p>
             <h2 className="font-headline-lg text-headline-lg text-on-surface text-center mb-xl reveal" style={{ transitionDelay: '0.08s' }}>Quem já usa, recomenda</h2>
@@ -368,7 +366,7 @@ function Landing() {
             <p className="font-body-lg text-on-surface-variant mb-xl max-w-xl mx-auto">
               Junte-se a milhares de estudantes que centralizaram escrita, normas e IA em uma única plataforma.
             </p>
-            <Link to="/dashboard" className="btn-primary inline-block font-label-md px-2xl py-3.5 rounded-2xl">Criar conta grátis</Link>
+            <Link to="/login" className="btn-primary inline-block font-label-md px-2xl py-3.5 rounded-2xl">Criar conta grátis</Link>
           </div>
         </section>
       </main>
@@ -400,4 +398,27 @@ function Landing() {
   );
 }
 
-// Removed PricingCard as we now use PlanCard
+function PricingCard({ tier, price, features, cta, highlight, priceXl = true }: {
+  tier: string; price: string; features: string[]; cta: string; highlight?: "popular" | "dark"; priceXl?: boolean;
+}) {
+  const popular = highlight === "popular";
+  const dark = highlight === "dark";
+  return (
+    <div className={`thesius-card p-lg flex flex-col h-full relative ${popular ? "pricing-popular scale-[1.02] z-10" : ""}`}>
+      {popular && <div className="absolute -top-3 left-1/2 -translate-x-1/2 bg-primary text-on-primary text-[10px] px-4 py-1 rounded-full font-bold uppercase tracking-wide">Mais popular</div>}
+      <h3 className={`font-label-md font-bold uppercase tracking-wider mb-sm ${popular ? "text-primary" : "text-on-surface-variant"}`}>{tier}</h3>
+      <div className="mb-lg">
+        <span className={`${priceXl ? "text-4xl" : "text-3xl"} font-bold text-on-surface tabular-nums`}>{price}</span>
+        {priceXl && <span className="text-on-surface-variant">/mês</span>}
+      </div>
+      <ul className="space-y-sm mb-xl flex-grow">
+        {features.map((f) => (
+          <li key={f} className="flex items-center gap-xs text-sm">
+            <Icon name="check_circle" className="text-primary shrink-0" size={20} /> {f}
+          </li>
+        ))}
+      </ul>
+      <Link to="/dashboard" className={`w-full py-2.5 rounded-xl font-label-md text-center block transition-opacity ${popular || dark ? "btn-primary" : "btn-ghost"}`}>{cta}</Link>
+    </div>
+  );
+}

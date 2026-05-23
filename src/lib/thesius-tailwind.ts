@@ -72,16 +72,16 @@ export const thesiusTailwindConfig = `tailwind.config = {
         xs: "4px"
       },
       fontFamily: {
-        sans: ["Inter", "system-ui", "-apple-system", "Segoe UI", "sans-serif"],
-        display: ["Manrope", "Inter", "system-ui", "sans-serif"],
-        "headline-md": ["Manrope", "Inter", "system-ui", "sans-serif"],
-        "headline-lg": ["Manrope", "Inter", "system-ui", "sans-serif"],
-        "headline-lg-mobile": ["Manrope", "Inter", "system-ui", "sans-serif"],
-        "display-lg": ["Manrope", "Inter", "system-ui", "sans-serif"],
-        "body-md": ["Inter", "system-ui", "sans-serif"],
-        "body-lg": ["Inter", "system-ui", "sans-serif"],
-        "label-md": ["Inter", "system-ui", "sans-serif"],
-        "label-sm": ["Inter", "system-ui", "sans-serif"]
+        sans: ["DM Sans", "ui-sans-serif", "system-ui", "sans-serif"],
+        display: ["Fraunces", "ui-serif", "Georgia", "serif"],
+        "headline-md": ["Fraunces", "ui-serif", "Georgia", "serif"],
+        "headline-lg": ["Fraunces", "ui-serif", "Georgia", "serif"],
+        "headline-lg-mobile": ["Fraunces", "ui-serif", "Georgia", "serif"],
+        "display-lg": ["Fraunces", "ui-serif", "Georgia", "serif"],
+        "body-md": ["DM Sans", "ui-sans-serif", "system-ui", "sans-serif"],
+        "body-lg": ["DM Sans", "ui-sans-serif", "system-ui", "sans-serif"],
+        "label-md": ["DM Sans", "ui-sans-serif", "system-ui", "sans-serif"],
+        "label-sm": ["DM Sans", "ui-sans-serif", "system-ui", "sans-serif"]
       },
       fontSize: {
         "headline-md": ["1.5rem", { lineHeight: "2rem", letterSpacing: "-0.015em", fontWeight: "600" }],
@@ -109,11 +109,14 @@ export const thesiusGlobalCss = `
     text-rendering: optimizeLegibility;
   }
   body {
-    font-family: 'Inter', system-ui, -apple-system, 'Segoe UI', sans-serif;
+    font-family: 'DM Sans', ui-sans-serif, system-ui, sans-serif;
     font-size: 1rem;
     line-height: 1.5;
     font-feature-settings: 'cv02', 'cv03', 'cv04', 'cv11';
-    background-color: #06060A;
+    background:
+      radial-gradient(circle at 8% -20%, rgba(212, 185, 110, 0.18), transparent 30%),
+      radial-gradient(circle at 90% -10%, rgba(106, 138, 196, 0.12), transparent 32%),
+      #06060A;
     color: #F4F3F0;
     scroll-behavior: smooth;
   }
@@ -122,22 +125,46 @@ export const thesiusGlobalCss = `
     position: fixed;
     inset: 0;
     background-image:
-      radial-gradient(ellipse 100% 80% at 50% -30%, rgba(201, 169, 98, 0.08), transparent 50%),
-      linear-gradient(rgba(255,255,255,0.02) 1px, transparent 1px),
-      linear-gradient(90deg, rgba(255,255,255,0.02) 1px, transparent 1px);
-    background-size: 100% 100%, 48px 48px, 48px 48px;
+      radial-gradient(ellipse 100% 80% at 50% -30%, rgba(201, 169, 98, 0.12), transparent 52%),
+      linear-gradient(rgba(255,255,255,0.018) 1px, transparent 1px),
+      linear-gradient(90deg, rgba(255,255,255,0.018) 1px, transparent 1px);
+    background-size: 100% 100%, 42px 42px, 42px 42px;
     pointer-events: none;
     z-index: 0;
+    mask-image: linear-gradient(to bottom, rgba(0,0,0,1), rgba(0,0,0,0.35));
+  }
+  body::after {
+    content: '';
+    position: fixed;
+    inset: 0;
+    pointer-events: none;
+    z-index: 0;
+    opacity: 0.14;
+    background-image:
+      radial-gradient(rgba(255,255,255,0.12) 0.6px, transparent 0.6px),
+      radial-gradient(rgba(255,255,255,0.08) 0.5px, transparent 0.5px);
+    background-size: 4px 4px, 7px 7px;
+    background-position: 0 0, 11px 9px;
   }
   h1, h2, h3, h4, h5, h6,
   .font-display-lg, .font-headline-lg, .font-headline-md, .font-headline-lg-mobile {
-    font-family: 'Manrope', 'Inter', system-ui, sans-serif;
+    font-family: 'Fraunces', ui-serif, Georgia, serif;
     font-feature-settings: normal;
   }
   .font-label-md, .font-label-sm, .font-body-md, .font-body-lg {
-    font-family: 'Inter', system-ui, sans-serif;
+    font-family: 'DM Sans', ui-sans-serif, system-ui, sans-serif;
   }
   input, textarea, button, select { font-family: inherit; }
+  .app-shell-search {
+    background: rgba(255, 255, 255, 0.045) !important;
+    border-color: rgba(255, 255, 255, 0.1) !important;
+    color: #F4F3F0 !important;
+    box-shadow: inset 0 1px 0 rgba(255,255,255,0.08), 0 8px 24px rgba(0,0,0,0.24) !important;
+  }
+  .app-shell-search:focus {
+    background: rgba(255, 255, 255, 0.06) !important;
+    border-color: rgba(201, 169, 98, 0.38) !important;
+  }
 
   .material-symbols-outlined {
     font-family: 'Material Symbols Outlined';
@@ -148,20 +175,37 @@ export const thesiusGlobalCss = `
 
   /* —— Superfícies —— */
   .surface-glass, .glass-panel, .surface_glass {
-    background: rgba(18, 18, 26, 0.75);
-    backdrop-filter: blur(16px) saturate(1.2);
-    border: 1px solid rgba(255, 255, 255, 0.08);
+    background:
+      linear-gradient(160deg, rgba(255,255,255,0.08), rgba(255,255,255,0.02) 38%, rgba(255,255,255,0.01)),
+      rgba(10, 11, 17, 0.75);
+    backdrop-filter: blur(22px) saturate(1.35);
+    border: 1px solid rgba(255, 255, 255, 0.12);
+    box-shadow: 0 14px 40px rgba(0, 0, 0, 0.45), inset 0 1px 0 rgba(255,255,255,0.15);
   }
   .thesius-card {
-    background: linear-gradient(145deg, #14141C 0%, #12121A 100%);
-    border: 1px solid rgba(255, 255, 255, 0.06);
+    background:
+      linear-gradient(150deg, rgba(26, 27, 36, 0.97), rgba(14, 14, 22, 0.98)),
+      radial-gradient(circle at top right, rgba(201,169,98,0.08), transparent 42%);
+    border: 1px solid rgba(255, 255, 255, 0.09);
     border-radius: 1rem;
-    box-shadow: 0 4px 24px rgba(0, 0, 0, 0.35);
-    transition: border-color 0.25s, box-shadow 0.25s, transform 0.25s;
+    box-shadow: 0 10px 34px rgba(0, 0, 0, 0.42), inset 0 1px 0 rgba(255,255,255,0.09);
+    transition: border-color 0.32s, box-shadow 0.32s, transform 0.32s;
+    position: relative;
+    overflow: hidden;
+  }
+  .thesius-card::before {
+    content: '';
+    position: absolute;
+    inset: -40% 35% auto -40%;
+    height: 75%;
+    border-radius: 999px;
+    background: radial-gradient(circle, rgba(201,169,98,0.14), transparent 68%);
+    pointer-events: none;
+    transform: rotate(-18deg);
   }
   .thesius-card:hover {
-    border-color: rgba(201, 169, 98, 0.25);
-    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.45), 0 0 0 1px rgba(201, 169, 98, 0.08);
+    border-color: rgba(201, 169, 98, 0.32);
+    box-shadow: 0 20px 52px rgba(0, 0, 0, 0.55), 0 0 0 1px rgba(201, 169, 98, 0.16);
   }
   .ambient-shadow, .academic-glow { box-shadow: 0 4px 24px rgba(0, 0, 0, 0.4); }
   .status-dot { background-color: #4ade80; box-shadow: 0 0 10px rgba(74, 222, 128, 0.45); }
@@ -174,8 +218,11 @@ export const thesiusGlobalCss = `
     box-shadow: inset 3px 0 0 #C9A962;
   }
   .sidebar-elegant {
-    background: linear-gradient(180deg, #0E0E14 0%, #0A0A10 100%);
-    border-right: 1px solid rgba(255, 255, 255, 0.06);
+    background:
+      linear-gradient(180deg, rgba(15, 16, 24, 0.98) 0%, rgba(8, 8, 13, 0.98) 100%),
+      radial-gradient(circle at 10% -5%, rgba(201,169,98,0.15), transparent 40%);
+    border-right: 1px solid rgba(255, 255, 255, 0.1);
+    box-shadow: inset -1px 0 0 rgba(255,255,255,0.04);
   }
   .logo-glow {
     box-shadow: 0 0 24px rgba(201, 169, 98, 0.35);
@@ -231,12 +278,12 @@ export const thesiusGlobalCss = `
     color: #06060A;
     font-weight: 600;
     border-radius: 0.75rem;
-    box-shadow: 0 4px 20px rgba(201, 169, 98, 0.35), inset 0 1px 0 rgba(255,255,255,0.2);
-    transition: transform 0.2s, box-shadow 0.2s, filter 0.2s;
+    box-shadow: 0 10px 24px rgba(201, 169, 98, 0.35), inset 0 1px 0 rgba(255,255,255,0.22);
+    transition: transform 0.26s, box-shadow 0.26s, filter 0.26s;
   }
   .btn-primary:hover {
-    transform: translateY(-1px);
-    box-shadow: 0 8px 28px rgba(201, 169, 98, 0.45);
+    transform: translateY(-2px) scale(1.01);
+    box-shadow: 0 16px 32px rgba(201, 169, 98, 0.5);
     filter: brightness(1.05);
   }
   .btn-ghost {
@@ -245,11 +292,12 @@ export const thesiusGlobalCss = `
     color: #F4F3F0;
     border-radius: 0.75rem;
     font-weight: 500;
-    transition: background 0.2s, border-color 0.2s;
+    transition: background 0.24s, border-color 0.24s, transform 0.24s;
   }
   .btn-ghost:hover {
     background: rgba(255, 255, 255, 0.08);
     border-color: rgba(201, 169, 98, 0.35);
+    transform: translateY(-1px);
   }
 
   /* —— Landing —— */
@@ -293,12 +341,12 @@ export const thesiusGlobalCss = `
     border: 1px solid rgba(255,255,255,0.06);
     border-radius: 1rem;
     padding: 1.75rem;
-    transition: border-color 0.25s, box-shadow 0.25s, transform 0.25s;
+    transition: border-color 0.35s, box-shadow 0.35s, transform 0.35s;
   }
   .saas-feature-card:hover {
     border-color: rgba(201,169,98,0.3);
     box-shadow: 0 16px 48px rgba(0,0,0,0.4);
-    transform: translateY(-4px);
+    transform: translateY(-7px) scale(1.012);
   }
   .saas-step {
     background: linear-gradient(160deg, #14141C, #12121A);
@@ -310,8 +358,8 @@ export const thesiusGlobalCss = `
   .saas-step:hover { border-color: rgba(201,169,98,0.35); }
   .hero-mesh {
     background-image:
-      radial-gradient(ellipse 90% 60% at 20% 0%, rgba(201, 169, 98, 0.14), transparent 55%),
-      radial-gradient(ellipse 70% 50% at 90% 10%, rgba(168, 155, 196, 0.08), transparent 50%);
+      radial-gradient(ellipse 100% 65% at 18% 0%, rgba(201, 169, 98, 0.18), transparent 55%),
+      radial-gradient(ellipse 82% 58% at 92% 8%, rgba(106, 138, 196, 0.14), transparent 52%);
   }
   .saas-float { animation: float 6s ease-in-out infinite; }
   @keyframes float { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-10px); } }

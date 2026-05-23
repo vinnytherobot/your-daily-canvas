@@ -2,8 +2,14 @@ import { createFileRoute } from "@tanstack/react-router";
 import { AppShell, Icon } from "../components/AppShell";
 import { PageHeader } from "../components/PageHeader";
 import { StatCard } from "../components/StatCard";
+import { requireAuthOrRedirect } from "../lib/auth";
+import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
 
 export const Route = createFileRoute("/library")({
+  beforeLoad: ({ location }) => {
+    requireAuthOrRedirect(location.pathname);
+  },
   head: () => ({ meta: [{ title: "Thesius | Biblioteca de Referências" }] }),
   component: Library,
 });
@@ -25,12 +31,12 @@ function Library() {
           description="Importe PDFs e DOCX, extraia citações e gere bibliografias em ABNT, APA ou Vancouver."
           actions={
             <>
-              <button type="button" className="btn-ghost px-md py-2.5 font-label-md flex items-center gap-sm">
+              <Button type="button" className="btn-ghost px-md py-2.5 font-label-md flex items-center gap-sm">
                 <Icon name="upload_file" size={20} /> Importar
-              </button>
-              <button type="button" className="btn-primary px-lg py-2.5 font-label-md flex items-center gap-sm">
+              </Button>
+              <Button type="button" className="btn-primary px-lg py-2.5 font-label-md flex items-center gap-sm">
                 <Icon name="add" size={20} /> Nova referência
-              </button>
+              </Button>
             </>
           }
         />
@@ -46,29 +52,26 @@ function Library() {
           <div className="p-lg border-b border-white/6 flex flex-col lg:flex-row gap-md lg:items-center lg:justify-between">
             <div className="relative flex-1 max-w-md w-full">
               <Icon name="search" className="absolute left-4 top-1/2 -translate-y-1/2 text-on-surface-variant pointer-events-none" size={20} />
-              <input
-                className="w-full bg-white/4 border border-white/8 rounded-full pl-11 pr-lg py-2.5 outline-none focus:ring-2 focus:ring-primary/25 placeholder:text-on-surface-variant/60"
+              <Input className="app-shell-search w-full rounded-full pl-11 pr-lg py-2.5 outline-none placeholder:text-on-surface-variant/60"
                 placeholder="Autor, título ou DOI..."
-                type="search"
-              />
+                type="search" />
             </div>
             <div className="flex flex-wrap gap-2">
               {["Todas", "ABNT", "APA", "Vancouver"].map((f, i) => (
-                <button
+                <Button
                   type="button"
                   key={f}
-                  className={`px-4 py-1.5 rounded-full font-label-sm transition-colors ${
-                    i === 0 ? "bg-primary text-on-primary font-semibold" : "btn-ghost !py-1.5 !px-4 text-sm"
-                  }`}
+                  variant={i === 0 ? "default" : "outline"}
+                  className="px-4 py-1.5 rounded-full font-label-sm transition-colors"
                 >
                   {f}
-                </button>
+                </Button>
               ))}
             </div>
           </div>
           <ul className="divide-y divide-white/6">
             {sources.map((s) => (
-              <li key={s.title} className="p-lg flex flex-col md:flex-row md:items-center gap-md hover:bg-white/[0.02] transition-colors group">
+              <li key={s.title} className="p-lg flex flex-col md:flex-row md:items-center gap-md hover:bg-white/2 transition-colors group">
                 <div className="w-12 h-12 rounded-xl bg-primary/10 flex items-center justify-center shrink-0">
                   <Icon name="menu_book" className="text-primary" size={24} />
                 </div>
@@ -85,12 +88,12 @@ function Library() {
                     {s.format}
                   </span>
                   <span className="text-xs text-on-surface-variant tabular-nums">{s.cited} citações</span>
-                  <button type="button" className="p-2 rounded-lg hover:bg-white/5 text-primary" aria-label="Copiar">
+                  <Button type="button" variant="ghost" size="icon" className="p-2 rounded-lg hover:bg-white/5 text-primary" aria-label="Copiar">
                     <Icon name="content_copy" size={20} />
-                  </button>
-                  <button type="button" className="p-2 rounded-lg hover:bg-white/5 text-on-surface-variant" aria-label="Mais">
+                  </Button>
+                  <Button type="button" variant="ghost" size="icon" className="p-2 rounded-lg hover:bg-white/5 text-on-surface-variant" aria-label="Mais">
                     <Icon name="more_vert" size={20} />
-                  </button>
+                  </Button>
                 </div>
               </li>
             ))}
@@ -108,12 +111,16 @@ function Library() {
                 Pergunte à sua biblioteca e receba respostas com citação direta da página.
               </p>
             </div>
-            <button type="button" className="btn-primary px-lg py-2.5 font-label-md shrink-0">
+            <Button type="button" className="btn-primary px-lg py-2.5 font-label-md shrink-0">
               Experimentar busca
-            </button>
+            </Button>
           </div>
         </div>
       </div>
     </AppShell>
   );
 }
+
+
+
+

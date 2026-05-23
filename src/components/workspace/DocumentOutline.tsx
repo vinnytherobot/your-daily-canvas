@@ -1,5 +1,6 @@
 import { Icon } from "../Icon";
 import type { OutlineItem } from "../../lib/document-outline";
+import { Button } from "@/components/ui/button";
 
 type DocumentOutlineProps = {
   items: OutlineItem[];
@@ -40,9 +41,9 @@ export function DocumentOutline({
           Use <strong className="text-primary">Título 1, 2 ou 3</strong> na barra do editor para criar tópicos e subtópicos.
         </p>
         {onAddSection && (
-          <button type="button" onClick={onAddSection} className="mt-sm text-xs text-primary hover:underline">
+          <Button type="button" onClick={onAddSection} className="mt-sm text-xs text-primary hover:underline">
             + Inserir tópico
-          </button>
+          </Button>
         )}
       </div>
     );
@@ -59,7 +60,7 @@ export function DocumentOutline({
 
         return (
           <div key={item.id} className="flex items-stretch" style={{ paddingLeft: `${item.depth * 12}px` }}>
-            <button
+            <Button
               type="button"
               onClick={() => onSelect(item)}
               className={`flex-1 flex items-center gap-xs py-1.5 px-2 text-left rounded-lg transition-colors min-w-0 group ${
@@ -98,10 +99,14 @@ export function DocumentOutline({
               <span className="text-[9px] font-bold text-on-surface-variant/40 uppercase shrink-0">
                 H{item.level}
               </span>
-            </button>
+            </Button>
           </div>
         );
       })}
     </div>
   );
 }
+
+
+
+

@@ -135,9 +135,9 @@ function Dashboard() {
             <div className="rounded-2xl p-lg bg-gradient-to-br from-primary/20 via-primary/5 to-transparent border border-primary/25 reveal reveal-delay-3 floating-element-delayed">
               <p className="section-eyebrow mb-xs">Upgrade</p>
               <p className="text-sm text-on-surface mb-md">IA ilimitada e colaboração em tempo real.</p>
-              <button type="button" className="text-sm font-semibold text-primary hover:underline">
+              <Link to="/subscription" className="text-sm font-semibold text-primary hover:underline">
                 Ver plano Pro →
-              </button>
+              </Link>
             </div>
           </div>
         </div>

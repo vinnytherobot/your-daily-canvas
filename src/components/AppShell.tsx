@@ -10,6 +10,8 @@ const NAV_MAIN = [
 ] as const;
 
 const NAV_EXTRA = [
+  { id: "subscription", to: "/subscription", label: "Assinatura", icon: "workspace_premium" },
+  { id: "billing", to: "/billing", label: "Financeiro", icon: "account_balance" },
   { id: "metrics", to: "/dashboard", label: "Métricas", icon: "bar_chart" },
   { id: "settings", to: "/dashboard", label: "Configurações", icon: "settings" },
 ] as const;
@@ -18,6 +20,8 @@ function navIsActive(id: string, path: string): boolean {
   if (id === "projects") return path === "/dashboard";
   if (id === "editor") return path.startsWith("/workspace");
   if (id === "library") return path.startsWith("/library");
+  if (id === "subscription") return path.startsWith("/subscription") || path.startsWith("/access-control");
+  if (id === "billing") return path.startsWith("/billing");
   return false;
 }
 

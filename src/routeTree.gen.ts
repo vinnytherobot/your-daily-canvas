@@ -10,13 +10,28 @@
 
 import { Route as rootRouteImport } from './routes/__root'
 import { Route as WorkspaceRouteImport } from './routes/workspace'
+import { Route as SubscriptionRouteImport } from './routes/subscription'
+import { Route as PricingRouteImport } from './routes/pricing'
 import { Route as LibraryRouteImport } from './routes/library'
 import { Route as DashboardRouteImport } from './routes/dashboard'
+import { Route as CheckoutRouteImport } from './routes/checkout'
+import { Route as BillingRouteImport } from './routes/billing'
+import { Route as AccessControlRouteImport } from './routes/access-control'
 import { Route as IndexRouteImport } from './routes/index'
 
 const WorkspaceRoute = WorkspaceRouteImport.update({
   id: '/workspace',
   path: '/workspace',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const SubscriptionRoute = SubscriptionRouteImport.update({
+  id: '/subscription',
+  path: '/subscription',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const PricingRoute = PricingRouteImport.update({
+  id: '/pricing',
+  path: '/pricing',
   getParentRoute: () => rootRouteImport,
 } as any)
 const LibraryRoute = LibraryRouteImport.update({
@@ -29,6 +44,21 @@ const DashboardRoute = DashboardRouteImport.update({
   path: '/dashboard',
   getParentRoute: () => rootRouteImport,
 } as any)
+const CheckoutRoute = CheckoutRouteImport.update({
+  id: '/checkout',
+  path: '/checkout',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const BillingRoute = BillingRouteImport.update({
+  id: '/billing',
+  path: '/billing',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const AccessControlRoute = AccessControlRouteImport.update({
+  id: '/access-control',
+  path: '/access-control',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const IndexRoute = IndexRouteImport.update({
   id: '/',
   path: '/',
@@ -37,35 +67,83 @@ const IndexRoute = IndexRouteImport.update({
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
+  '/access-control': typeof AccessControlRoute
+  '/billing': typeof BillingRoute
+  '/checkout': typeof CheckoutRoute
   '/dashboard': typeof DashboardRoute
   '/library': typeof LibraryRoute
+  '/pricing': typeof PricingRoute
+  '/subscription': typeof SubscriptionRoute
   '/workspace': typeof WorkspaceRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
+  '/access-control': typeof AccessControlRoute
+  '/billing': typeof BillingRoute
+  '/checkout': typeof CheckoutRoute
   '/dashboard': typeof DashboardRoute
   '/library': typeof LibraryRoute
+  '/pricing': typeof PricingRoute
+  '/subscription': typeof SubscriptionRoute
   '/workspace': typeof WorkspaceRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
+  '/access-control': typeof AccessControlRoute
+  '/billing': typeof BillingRoute
+  '/checkout': typeof CheckoutRoute
   '/dashboard': typeof DashboardRoute
   '/library': typeof LibraryRoute
+  '/pricing': typeof PricingRoute
+  '/subscription': typeof SubscriptionRoute
   '/workspace': typeof WorkspaceRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
-  fullPaths: '/' | '/dashboard' | '/library' | '/workspace'
+  fullPaths:
+    | '/'
+    | '/access-control'
+    | '/billing'
+    | '/checkout'
+    | '/dashboard'
+    | '/library'
+    | '/pricing'
+    | '/subscription'
+    | '/workspace'
   fileRoutesByTo: FileRoutesByTo
-  to: '/' | '/dashboard' | '/library' | '/workspace'
-  id: '__root__' | '/' | '/dashboard' | '/library' | '/workspace'
+  to:
+    | '/'
+    | '/access-control'
+    | '/billing'
+    | '/checkout'
+    | '/dashboard'
+    | '/library'
+    | '/pricing'
+    | '/subscription'
+    | '/workspace'
+  id:
+    | '__root__'
+    | '/'
+    | '/access-control'
+    | '/billing'
+    | '/checkout'
+    | '/dashboard'
+    | '/library'
+    | '/pricing'
+    | '/subscription'
+    | '/workspace'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
+  AccessControlRoute: typeof AccessControlRoute
+  BillingRoute: typeof BillingRoute
+  CheckoutRoute: typeof CheckoutRoute
   DashboardRoute: typeof DashboardRoute
   LibraryRoute: typeof LibraryRoute
+  PricingRoute: typeof PricingRoute
+  SubscriptionRoute: typeof SubscriptionRoute
   WorkspaceRoute: typeof WorkspaceRoute
 }
 
@@ -76,6 +154,20 @@ declare module '@tanstack/react-router' {
       path: '/workspace'
       fullPath: '/workspace'
       preLoaderRoute: typeof WorkspaceRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/subscription': {
+      id: '/subscription'
+      path: '/subscription'
+      fullPath: '/subscription'
+      preLoaderRoute: typeof SubscriptionRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/pricing': {
+      id: '/pricing'
+      path: '/pricing'
+      fullPath: '/pricing'
+      preLoaderRoute: typeof PricingRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/library': {
@@ -92,6 +184,27 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof DashboardRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/checkout': {
+      id: '/checkout'
+      path: '/checkout'
+      fullPath: '/checkout'
+      preLoaderRoute: typeof CheckoutRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/billing': {
+      id: '/billing'
+      path: '/billing'
+      fullPath: '/billing'
+      preLoaderRoute: typeof BillingRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/access-control': {
+      id: '/access-control'
+      path: '/access-control'
+      fullPath: '/access-control'
+      preLoaderRoute: typeof AccessControlRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/': {
       id: '/'
       path: '/'
@@ -104,8 +217,13 @@ declare module '@tanstack/react-router' {
 
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
+  AccessControlRoute: AccessControlRoute,
+  BillingRoute: BillingRoute,
+  CheckoutRoute: CheckoutRoute,
   DashboardRoute: DashboardRoute,
   LibraryRoute: LibraryRoute,
+  PricingRoute: PricingRoute,
+  SubscriptionRoute: SubscriptionRoute,
   WorkspaceRoute: WorkspaceRoute,
 }
 export const routeTree = rootRouteImport

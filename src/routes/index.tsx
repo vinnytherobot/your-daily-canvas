@@ -2,6 +2,8 @@ import { createFileRoute, Link } from "@tanstack/react-router";
 import { Icon } from "../components/Icon";
 import { useState, useEffect, useRef } from "react";
 import { Logo } from "../components/Logo";
+import { PlanCard } from "../components/billing/PlanCard";
+import { PLANS } from "../lib/subscription-data";
 
 export const Route = createFileRoute("/")({
   head: () => ({
@@ -350,10 +352,10 @@ function Landing() {
               <p className="font-body-md text-on-surface-variant">Monetização transparente. Comece grátis, evolua quando precisar.</p>
             </div>
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-md">
-              <PricingCard tier="Free" price="R$ 0" features={["1 projeto acadêmico", "Editor padrão", "Exportação PDF básica", "5k tokens IA/mês"]} cta="Começar grátis" />
-              <PricingCard tier="Student" price="R$ 29" features={["Projetos ilimitados", "ABNT/APA/Vancouver", "IA 50k tokens/mês", "Import DOCX/PDF"]} cta="Assinar" highlight="dark" />
-              <PricingCard tier="Pro" price="R$ 59" features={["IA ilimitada", "Colaboração tempo real", "Revisão estrutural IA", "Export Word + métricas"]} cta="Assinar" highlight="popular" />
-              <PricingCard tier="Institucional" price="Sob consulta" features={["SSO + multi-tenant", "Painel administrativo", "Templates por universidade", "Suporte dedicado"]} cta="Falar com vendas" priceXl={false} />
+              <PlanCard plan={PLANS[0]} cycle="annual" />
+              <PlanCard plan={PLANS[1]} cycle="annual" />
+              <PlanCard plan={PLANS[2]} cycle="annual" />
+              <PlanCard plan={PLANS[3]} cycle="annual" compact />
             </div>
           </div>
         </section>
@@ -398,27 +400,4 @@ function Landing() {
   );
 }
 
-function PricingCard({ tier, price, features, cta, highlight, priceXl = true }: {
-  tier: string; price: string; features: string[]; cta: string; highlight?: "popular" | "dark"; priceXl?: boolean;
-}) {
-  const popular = highlight === "popular";
-  const dark = highlight === "dark";
-  return (
-    <div className={`thesius-card p-lg flex flex-col h-full relative ${popular ? "pricing-popular scale-[1.02] z-10" : ""}`}>
-      {popular && <div className="absolute -top-3 left-1/2 -translate-x-1/2 bg-primary text-on-primary text-[10px] px-4 py-1 rounded-full font-bold uppercase tracking-wide">Mais popular</div>}
-      <h3 className={`font-label-md font-bold uppercase tracking-wider mb-sm ${popular ? "text-primary" : "text-on-surface-variant"}`}>{tier}</h3>
-      <div className="mb-lg">
-        <span className={`${priceXl ? "text-4xl" : "text-3xl"} font-bold text-on-surface tabular-nums`}>{price}</span>
-        {priceXl && <span className="text-on-surface-variant">/mês</span>}
-      </div>
-      <ul className="space-y-sm mb-xl flex-grow">
-        {features.map((f) => (
-          <li key={f} className="flex items-center gap-xs text-sm">
-            <Icon name="check_circle" className="text-primary shrink-0" size={20} /> {f}
-          </li>
-        ))}
-      </ul>
-      <Link to="/dashboard" className={`w-full py-2.5 rounded-xl font-label-md text-center block transition-opacity ${popular || dark ? "btn-primary" : "btn-ghost"}`}>{cta}</Link>
-    </div>
-  );
-}
+// Removed PricingCard as we now use PlanCard

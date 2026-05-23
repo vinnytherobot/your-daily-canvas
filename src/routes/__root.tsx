@@ -10,6 +10,7 @@ import {
 
 import appCss from "../styles.css?url";
 import { thesiusTailwindConfig, thesiusGlobalCss } from "../lib/thesius-tailwind";
+import { Button } from "@/components/ui/button";
 
 function NotFoundComponent() {
   return (
@@ -49,11 +50,10 @@ function ErrorComponent({ error, reset }: { error: Error; reset: () => void }) {
           <p className="text-xs text-on-surface-variant font-mono break-all leading-relaxed">{error.message}</p>
         </div>
         <div className="flex gap-sm justify-center">
-          <button onClick={() => { router.invalidate(); reset(); }} className="btn-primary px-lg py-2.5 rounded-xl font-label-md inline-flex items-center gap-sm">
+          <Button onClick={() => { router.invalidate(); reset(); }} className="btn-primary px-lg py-2.5 rounded-xl font-label-md inline-flex items-center gap-sm">
             <span className="material-symbols-outlined" style={{ fontSize: 20 }} aria-hidden>refresh</span>
             Tentar novamente
-          </button>
-          <Link to="/" className="btn-ghost px-lg py-2.5 rounded-xl font-label-md">Voltar ao início</Link>
+          </Button>`r`n          <Link to="/" className="btn-ghost px-lg py-2.5 rounded-xl font-label-md">Voltar ao início</Link>
         </div>
       </div>
     </div>
@@ -74,7 +74,7 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
       { rel: "preconnect", href: "https://fonts.gstatic.com", crossOrigin: "anonymous" },
       {
         rel: "stylesheet",
-        href: "https://fonts.googleapis.com/css2?family=Inter:ital,opsz,wght@0,14..32,400;0,14..32,500;0,14..32,600;0,14..32,700;1,14..32,400&family=Manrope:wght@500;600;700;800&display=swap",
+        href: "https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Fraunces:opsz,wght,SOFT,WONK@9..144,500..700,70,0&display=swap",
       },
       { rel: "stylesheet", href: "https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap" },
     ],
@@ -113,3 +113,5 @@ function RootComponent() {
     </QueryClientProvider>
   );
 }
+
+

@@ -1,6 +1,7 @@
 import type { Editor } from "@tiptap/react";
 import { Icon } from "../Icon";
 import { useState } from "react";
+import { Button } from "@/components/ui/button";
 
 // Mock library data - in a real app, this would come from a service or context
 const mockLibrary = [
@@ -28,7 +29,7 @@ function ToolbarButton({
   icon: string;
 }) {
   return (
-    <button
+    <Button
       type="button"
       onClick={onClick}
       disabled={disabled}
@@ -37,7 +38,7 @@ function ToolbarButton({
       title={label}
     >
       <Icon name={icon} size={20} />
-    </button>
+    </Button>
   );
 }
 
@@ -232,19 +233,19 @@ export function EditorToolbar({ editor }: EditorToolbarProps) {
             </div>
 
             <div className="mt-4 pt-3 border-t border-white/10">
-              <button
+              <Button
                 onClick={insertCitation}
                 disabled={!selectedReference}
                 className={`w-full btn-${selectedReference ? "primary" : "ghost"} px-md py-2.5 font-label-md flex items-center justify-center gap-sm`}
               >
                 {selectedReference ? <><Icon name="content_copy" size={18} /> Inserir citação</> : "Selecione uma referência"}
-              </button>
-              <button
+              </Button>
+              <Button
                 onClick={() => setShowCitationPicker(false)}
                 className="w-full mt-2 btn-ghost px-md py-2 font-label-sm flex items-center justify-center gap-sm"
               >
                 <Icon name="close" size={18} /> Cancelar
-              </button>
+              </Button>
             </div>
           </div>
         </div>
@@ -252,3 +253,7 @@ export function EditorToolbar({ editor }: EditorToolbarProps) {
     </div>
   );
 }
+
+
+
+

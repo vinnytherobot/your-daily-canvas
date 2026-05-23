@@ -1,17 +1,20 @@
-import { Link, useRouterState } from "@tanstack/react-router";
+import { Link, useNavigate, useRouterState } from "@tanstack/react-router";
 import type { ReactNode } from "react";
+import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
+import { logout } from "../lib/auth";
 import { Icon } from "./Icon";
 import { Logo } from "./Logo";
 
 const NAV_MAIN = [
   { id: "projects", to: "/dashboard", label: "Projetos", icon: "dashboard" },
   { id: "editor", to: "/workspace", label: "Editor", icon: "edit_note" },
-  { id: "library", to: "/library", label: "Referências", icon: "library_books" },
+  { id: "library", to: "/library", label: "Referencias", icon: "library_books" },
 ] as const;
 
 const NAV_EXTRA = [
-  { id: "metrics", to: "/dashboard", label: "Métricas", icon: "bar_chart" },
-  { id: "settings", to: "/dashboard", label: "Configurações", icon: "settings" },
+  { id: "metrics", to: "/dashboard", label: "Metricas", icon: "bar_chart" },
+  { id: "settings", to: "/dashboard", label: "Configuracoes", icon: "settings" },
 ] as const;
 
 function navIsActive(id: string, path: string): boolean {
@@ -23,6 +26,7 @@ function navIsActive(id: string, path: string): boolean {
 
 export function AppShell({ children, user }: { children: ReactNode; user?: { name: string; role: string; avatar: string } }) {
   const path = useRouterState({ select: (s) => s.location.pathname });
+  const navigate = useNavigate();
   const u = user ?? {
     name: "Marina Costa",
     role: "Plano Pro",
@@ -75,9 +79,9 @@ export function AppShell({ children, user }: { children: ReactNode; user?: { nam
         </nav>
 
         <div className="mt-auto pt-lg border-t border-white/6 shrink-0 space-y-md">
-          <button type="button" className="btn-primary w-full py-3 rounded-xl font-label-md flex items-center justify-center gap-sm">
+          <Button type="button" className="btn-primary w-full py-3 rounded-xl font-label-md flex items-center justify-center gap-sm">
             <Icon name="add" size={20} /> Novo projeto
-          </button>
+          </Button>
           <div className="flex items-center gap-md px-sm py-sm rounded-xl bg-white/3 border border-white/6">
             <img alt="" className="w-10 h-10 rounded-full object-cover shrink-0 ring-2 ring-primary/30" src={u.avatar} />
             <div className="min-w-0 flex-1">
@@ -89,36 +93,52 @@ export function AppShell({ children, user }: { children: ReactNode; user?: { nam
       </aside>
 
       <div className="ml-[260px] flex flex-col min-h-screen relative z-10">
-        <header className="flex justify-between items-center gap-md px-xl py-md h-[72px] sticky top-0 z-40 border-b border-white/6 shrink-0 surface-glass">
+        <header className="flex justify-between items-center gap-md px-xl py-sm h-16 sticky top-0 z-40 border-b border-white/8 shrink-0 surface-glass">
           <div className="relative flex-1 max-w-lg">
             <Icon name="search" className="absolute left-4 top-1/2 -translate-y-1/2 text-on-surface-variant pointer-events-none" size={20} />
-            <input
-              className="w-full bg-white/4 border border-white/8 rounded-full pl-11 pr-lg py-2.5 font-body-md focus:ring-2 focus:ring-primary/25 focus:border-primary/30 outline-none placeholder:text-on-surface-variant/70 transition-shadow"
-              placeholder="Buscar projetos ou referências..."
+            <Input
+              className="app-shell-search w-full rounded-full pl-11 pr-lg py-2.5 font-body-md placeholder:text-on-surface-variant/70 transition-shadow"
+              placeholder="Buscar projetos ou referencias..."
               type="search"
             />
           </div>
           <div className="flex items-center gap-1 shrink-0">
             {[
-              { icon: "notifications", label: "Notificações" },
-              { icon: "history", label: "Histórico" },
+              { icon: "notifications", label: "Notificacoes" },
+              { icon: "history", label: "Historico" },
               { icon: "help", label: "Ajuda" },
             ].map((b) => (
-              <button
+              <Button
                 key={b.icon}
                 type="button"
-                className="p-2.5 rounded-xl text-on-surface-variant hover:text-primary hover:bg-white/5 transition-colors"
+                variant="ghost"
+                size="icon"
+                className={`p-2.5 rounded-xl text-on-surface-variant hover:text-primary hover:bg-white/5 transition-colors ${b.icon === "notifications" ? "has-notification" : ""}`}
                 aria-label={b.label}
               >
                 <Icon name={b.icon} size={22} />
-              </button>
+              </Button>
             ))}
+            <Button
+              type="button"
+              variant="ghost"
+              size="icon"
+              className="p-2.5 rounded-xl text-on-surface-variant hover:text-primary hover:bg-white/5 transition-colors"
+              aria-label="Sair"
+              onClick={async () => {
+                logout();
+                await navigate({ to: "/" });
+              }}
+            >
+              <Icon name="logout" size={22} />
+            </Button>
           </div>
         </header>
-        <main className="flex-1 p-xl max-w-[1400px] w-full mx-auto">{children}</main>
+        <main className="flex-1 px-xl py-lg max-w-[1280px] w-full mx-auto">{children}</main>
       </div>
     </div>
   );
 }
 
 export { Icon } from "./Icon";
+

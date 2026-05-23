@@ -707,10 +707,7 @@ export const thesiusGlobalCss = `
     animation: fadeInUp 0.4s cubic-bezier(0.16, 1, 0.3, 1) both;
   }
 
-<<<<<<< HEAD
-=======
 
->>>>>>> 731470ec75e1ed0aa897f896b78b5eef0ec8ff20
   /* ━━ Billing & Subscription ━━ */
   .pricing-popular {
     border: 1px solid rgba(201, 169, 98, 0.45) !important;
@@ -728,9 +725,7 @@ export const thesiusGlobalCss = `
   
   .billing-table th { font-weight: 600; }
   .billing-table td { vertical-align: middle; }
-<<<<<<< HEAD
-=======
-=======
+
   /* â”â” Auth surfaces â”â” */
   .auth-shell {
     position: relative;

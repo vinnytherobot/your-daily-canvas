@@ -13,21 +13,10 @@ const NAV_MAIN = [
 ] as const;
 
 const NAV_EXTRA = [
-<<<<<<< HEAD
-=======
-
->>>>>>> 731470ec75e1ed0aa897f896b78b5eef0ec8ff20
   { id: "subscription", to: "/subscription", label: "Assinatura", icon: "workspace_premium" },
   { id: "billing", to: "/billing", label: "Financeiro", icon: "account_balance" },
   { id: "metrics", to: "/dashboard", label: "Métricas", icon: "bar_chart" },
   { id: "settings", to: "/dashboard", label: "Configurações", icon: "settings" },
-<<<<<<< HEAD
-=======
-
-  { id: "metrics", to: "/dashboard", label: "Metricas", icon: "bar_chart" },
-  { id: "settings", to: "/dashboard", label: "Configuracoes", icon: "settings" },
-
->>>>>>> 731470ec75e1ed0aa897f896b78b5eef0ec8ff20
 ] as const;
 
 function navIsActive(id: string, path: string): boolean {

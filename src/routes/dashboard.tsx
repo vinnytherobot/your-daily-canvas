@@ -139,22 +139,10 @@ function Dashboard() {
 
             <div className="rounded-2xl p-lg bg-gradient-to-br from-primary/20 via-primary/5 to-transparent border border-primary/25 reveal-delay-3 floating-element-delayed">
               <p className="section-eyebrow mb-xs">Upgrade</p>
-<<<<<<< HEAD
               <p className="text-sm text-on-surface mb-md">IA ilimitada e colaboração em tempo real.</p>
               <Link to="/subscription" className="text-sm font-semibold text-primary hover:underline">
                 Ver plano Pro →
               </Link>
-=======
-
-              <Link to="/subscription" className="text-sm font-semibold text-primary hover:underline">
-                Ver plano Pro →
-              </Link>
-
-              <Button type="button" variant="ghost" className="text-sm font-semibold text-primary hover:underline">
-                Ver plano Pro →
-              </Button>
-
->>>>>>> 731470ec75e1ed0aa897f896b78b5eef0ec8ff20
             </div>
           </div>
         </div>

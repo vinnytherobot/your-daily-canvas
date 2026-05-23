@@ -707,6 +707,25 @@ export const thesiusGlobalCss = `
     animation: fadeInUp 0.4s cubic-bezier(0.16, 1, 0.3, 1) both;
   }
 
+
+  /* ━━ Billing & Subscription ━━ */
+  .pricing-popular {
+    border: 1px solid rgba(201, 169, 98, 0.45) !important;
+    box-shadow: 0 0 40px rgba(201, 169, 98, 0.15), 0 20px 50px rgba(0,0,0,0.4) !important;
+  }
+  .pricing-card-free { border-color: rgba(255,255,255,0.1); }
+  .pricing-card-student { border-color: rgba(148,163,184,0.3); }
+  .pricing-card-pro { border-color: rgba(201,169,98,0.4); }
+  .pricing-card-institutional { border-color: rgba(94,234,212,0.3); }
+  
+  .checkout-container {
+    max-width: 1000px;
+    margin: 0 auto;
+  }
+  
+  .billing-table th { font-weight: 600; }
+  .billing-table td { vertical-align: middle; }
+=======
   /* â”â” Auth surfaces â”â” */
   .auth-shell {
     position: relative;
@@ -741,4 +760,5 @@ export const thesiusGlobalCss = `
     box-shadow: 0 0 0 3px rgba(201,169,98,0.18);
     background: linear-gradient(180deg, rgba(255,255,255,0.08), rgba(255,255,255,0.04));
   }
+
 `;

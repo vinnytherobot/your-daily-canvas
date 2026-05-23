@@ -10,12 +10,19 @@
 
 import { Route as rootRouteImport } from './routes/__root'
 import { Route as WorkspaceRouteImport } from './routes/workspace'
+
+import { Route as SubscriptionRouteImport } from './routes/subscription'
+import { Route as PricingRouteImport } from './routes/pricing'
+
 import { Route as ResetPasswordRouteImport } from './routes/reset-password'
 import { Route as RegisterRouteImport } from './routes/register'
-import { Route as LoginRouteImport } from './routes/login'
+
 import { Route as LibraryRouteImport } from './routes/library'
 import { Route as ForgotPasswordRouteImport } from './routes/forgot-password'
 import { Route as DashboardRouteImport } from './routes/dashboard'
+import { Route as CheckoutRouteImport } from './routes/checkout'
+import { Route as BillingRouteImport } from './routes/billing'
+import { Route as AccessControlRouteImport } from './routes/access-control'
 import { Route as IndexRouteImport } from './routes/index'
 
 const WorkspaceRoute = WorkspaceRouteImport.update({
@@ -23,6 +30,16 @@ const WorkspaceRoute = WorkspaceRouteImport.update({
   path: '/workspace',
   getParentRoute: () => rootRouteImport,
 } as any)
+
+const SubscriptionRoute = SubscriptionRouteImport.update({
+  id: '/subscription',
+  path: '/subscription',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const PricingRoute = PricingRouteImport.update({
+  id: '/pricing',
+  path: '/pricing',
+
 const ResetPasswordRoute = ResetPasswordRouteImport.update({
   id: '/reset-password',
   path: '/reset-password',
@@ -36,6 +53,7 @@ const RegisterRoute = RegisterRouteImport.update({
 const LoginRoute = LoginRouteImport.update({
   id: '/login',
   path: '/login',
+
   getParentRoute: () => rootRouteImport,
 } as any)
 const LibraryRoute = LibraryRouteImport.update({
@@ -53,6 +71,21 @@ const DashboardRoute = DashboardRouteImport.update({
   path: '/dashboard',
   getParentRoute: () => rootRouteImport,
 } as any)
+const CheckoutRoute = CheckoutRouteImport.update({
+  id: '/checkout',
+  path: '/checkout',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const BillingRoute = BillingRouteImport.update({
+  id: '/billing',
+  path: '/billing',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const AccessControlRoute = AccessControlRouteImport.update({
+  id: '/access-control',
+  path: '/access-control',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const IndexRoute = IndexRouteImport.update({
   id: '/',
   path: '/',
@@ -61,76 +94,138 @@ const IndexRoute = IndexRouteImport.update({
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
+  '/access-control': typeof AccessControlRoute
+  '/billing': typeof BillingRoute
+  '/checkout': typeof CheckoutRoute
   '/dashboard': typeof DashboardRoute
   '/forgot-password': typeof ForgotPasswordRoute
   '/library': typeof LibraryRoute
+
+  '/pricing': typeof PricingRoute
+  '/subscription': typeof SubscriptionRoute
+
   '/login': typeof LoginRoute
   '/register': typeof RegisterRoute
   '/reset-password': typeof ResetPasswordRoute
+
   '/workspace': typeof WorkspaceRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
+  '/access-control': typeof AccessControlRoute
+  '/billing': typeof BillingRoute
+  '/checkout': typeof CheckoutRoute
   '/dashboard': typeof DashboardRoute
   '/forgot-password': typeof ForgotPasswordRoute
   '/library': typeof LibraryRoute
+
+  '/pricing': typeof PricingRoute
+  '/subscription': typeof SubscriptionRoute
+
   '/login': typeof LoginRoute
   '/register': typeof RegisterRoute
   '/reset-password': typeof ResetPasswordRoute
+
   '/workspace': typeof WorkspaceRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
+  '/access-control': typeof AccessControlRoute
+  '/billing': typeof BillingRoute
+  '/checkout': typeof CheckoutRoute
   '/dashboard': typeof DashboardRoute
   '/forgot-password': typeof ForgotPasswordRoute
   '/library': typeof LibraryRoute
+
+  '/pricing': typeof PricingRoute
+  '/subscription': typeof SubscriptionRoute
+
   '/login': typeof LoginRoute
   '/register': typeof RegisterRoute
   '/reset-password': typeof ResetPasswordRoute
+
   '/workspace': typeof WorkspaceRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
   fullPaths:
     | '/'
+
+    | '/access-control'
+    | '/billing'
+    | '/checkout'
+    | '/dashboard'
+    | '/library'
+    | '/pricing'
+    | '/subscription'
+
     | '/dashboard'
     | '/forgot-password'
     | '/library'
     | '/login'
     | '/register'
     | '/reset-password'
+
     | '/workspace'
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/'
+
+    | '/access-control'
+    | '/billing'
+    | '/checkout'
+    | '/dashboard'
+    | '/library'
+    | '/pricing'
+    | '/subscription'
+
     | '/dashboard'
     | '/forgot-password'
     | '/library'
     | '/login'
     | '/register'
     | '/reset-password'
+
     | '/workspace'
   id:
     | '__root__'
     | '/'
+
+    | '/access-control'
+    | '/billing'
+    | '/checkout'
+    | '/dashboard'
+    | '/library'
+    | '/pricing'
+    | '/subscription'
+
     | '/dashboard'
     | '/forgot-password'
     | '/library'
     | '/login'
     | '/register'
     | '/reset-password'
+
     | '/workspace'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
+  AccessControlRoute: typeof AccessControlRoute
+  BillingRoute: typeof BillingRoute
+  CheckoutRoute: typeof CheckoutRoute
   DashboardRoute: typeof DashboardRoute
   ForgotPasswordRoute: typeof ForgotPasswordRoute
   LibraryRoute: typeof LibraryRoute
+
+  PricingRoute: typeof PricingRoute
+  SubscriptionRoute: typeof SubscriptionRoute
+
   LoginRoute: typeof LoginRoute
   RegisterRoute: typeof RegisterRoute
   ResetPasswordRoute: typeof ResetPasswordRoute
+
   WorkspaceRoute: typeof WorkspaceRoute
 }
 
@@ -143,6 +238,20 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof WorkspaceRouteImport
       parentRoute: typeof rootRouteImport
     }
+
+    '/subscription': {
+      id: '/subscription'
+      path: '/subscription'
+      fullPath: '/subscription'
+      preLoaderRoute: typeof SubscriptionRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/pricing': {
+      id: '/pricing'
+      path: '/pricing'
+      fullPath: '/pricing'
+      preLoaderRoute: typeof PricingRouteImport
+
     '/reset-password': {
       id: '/reset-password'
       path: '/reset-password'
@@ -162,6 +271,7 @@ declare module '@tanstack/react-router' {
       path: '/login'
       fullPath: '/login'
       preLoaderRoute: typeof LoginRouteImport
+
       parentRoute: typeof rootRouteImport
     }
     '/library': {
@@ -185,6 +295,27 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof DashboardRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/checkout': {
+      id: '/checkout'
+      path: '/checkout'
+      fullPath: '/checkout'
+      preLoaderRoute: typeof CheckoutRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/billing': {
+      id: '/billing'
+      path: '/billing'
+      fullPath: '/billing'
+      preLoaderRoute: typeof BillingRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/access-control': {
+      id: '/access-control'
+      path: '/access-control'
+      fullPath: '/access-control'
+      preLoaderRoute: typeof AccessControlRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/': {
       id: '/'
       path: '/'
@@ -197,12 +328,20 @@ declare module '@tanstack/react-router' {
 
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
+  AccessControlRoute: AccessControlRoute,
+  BillingRoute: BillingRoute,
+  CheckoutRoute: CheckoutRoute,
   DashboardRoute: DashboardRoute,
   ForgotPasswordRoute: ForgotPasswordRoute,
   LibraryRoute: LibraryRoute,
+
+  PricingRoute: PricingRoute,
+  SubscriptionRoute: SubscriptionRoute,
+
   LoginRoute: LoginRoute,
   RegisterRoute: RegisterRoute,
   ResetPasswordRoute: ResetPasswordRoute,
+
   WorkspaceRoute: WorkspaceRoute,
 }
 export const routeTree = rootRouteImport

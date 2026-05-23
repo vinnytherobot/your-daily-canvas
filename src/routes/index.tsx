@@ -2,7 +2,12 @@ import { createFileRoute, Link } from "@tanstack/react-router";
 import { Icon } from "../components/Icon";
 import { useState, useEffect, useRef } from "react";
 import { Logo } from "../components/Logo";
+
+import { PlanCard } from "../components/billing/PlanCard";
+import { PLANS } from "../lib/subscription-data";
+
 import { Button } from "@/components/ui/button";
+
 
 export const Route = createFileRoute("/")({
   head: () => ({
@@ -351,10 +356,10 @@ function Landing() {
               <p className="font-body-md text-on-surface-variant">Monetização transparente. Comece grátis, evolua quando precisar.</p>
             </div>
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-md">
-              <PricingCard tier="Free" price="R$ 0" features={["1 projeto acadêmico", "Editor padrão", "Exportação PDF básica", "5k tokens IA/mês"]} cta="Começar grátis" />
-              <PricingCard tier="Student" price="R$ 29" features={["Projetos ilimitados", "ABNT/APA/Vancouver", "IA 50k tokens/mês", "Import DOCX/PDF"]} cta="Assinar" highlight="dark" />
-              <PricingCard tier="Pro" price="R$ 59" features={["IA ilimitada", "Colaboração tempo real", "Revisão estrutural IA", "Export Word + métricas"]} cta="Assinar" highlight="popular" />
-              <PricingCard tier="Institucional" price="Sob consulta" features={["SSO + multi-tenant", "Painel administrativo", "Templates por universidade", "Suporte dedicado"]} cta="Falar com vendas" priceXl={false} />
+              <PlanCard plan={PLANS[0]} cycle="annual" />
+              <PlanCard plan={PLANS[1]} cycle="annual" />
+              <PlanCard plan={PLANS[2]} cycle="annual" />
+              <PlanCard plan={PLANS[3]} cycle="annual" compact />
             </div>
           </div>
         </section>
@@ -399,6 +404,9 @@ function Landing() {
   );
 }
 
+
+// Removed PricingCard as we now use PlanCard
+
 function PricingCard({ tier, price, features, cta, highlight, priceXl = true }: {
   tier: string; price: string; features: string[]; cta: string; highlight?: "popular" | "dark"; priceXl?: boolean;
 }) {
@@ -423,6 +431,7 @@ function PricingCard({ tier, price, features, cta, highlight, priceXl = true }: 
     </div>
   );
 }
+
 
 
 

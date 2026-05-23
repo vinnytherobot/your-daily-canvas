@@ -10,13 +10,11 @@
 
 import { Route as rootRouteImport } from './routes/__root'
 import { Route as WorkspaceRouteImport } from './routes/workspace'
-
 import { Route as SubscriptionRouteImport } from './routes/subscription'
-import { Route as PricingRouteImport } from './routes/pricing'
-
 import { Route as ResetPasswordRouteImport } from './routes/reset-password'
 import { Route as RegisterRouteImport } from './routes/register'
-
+import { Route as PricingRouteImport } from './routes/pricing'
+import { Route as LoginRouteImport } from './routes/login'
 import { Route as LibraryRouteImport } from './routes/library'
 import { Route as ForgotPasswordRouteImport } from './routes/forgot-password'
 import { Route as DashboardRouteImport } from './routes/dashboard'
@@ -30,16 +28,11 @@ const WorkspaceRoute = WorkspaceRouteImport.update({
   path: '/workspace',
   getParentRoute: () => rootRouteImport,
 } as any)
-
 const SubscriptionRoute = SubscriptionRouteImport.update({
   id: '/subscription',
   path: '/subscription',
   getParentRoute: () => rootRouteImport,
 } as any)
-const PricingRoute = PricingRouteImport.update({
-  id: '/pricing',
-  path: '/pricing',
-
 const ResetPasswordRoute = ResetPasswordRouteImport.update({
   id: '/reset-password',
   path: '/reset-password',
@@ -50,10 +43,14 @@ const RegisterRoute = RegisterRouteImport.update({
   path: '/register',
   getParentRoute: () => rootRouteImport,
 } as any)
+const PricingRoute = PricingRouteImport.update({
+  id: '/pricing',
+  path: '/pricing',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const LoginRoute = LoginRouteImport.update({
   id: '/login',
   path: '/login',
-
   getParentRoute: () => rootRouteImport,
 } as any)
 const LibraryRoute = LibraryRouteImport.update({
@@ -100,14 +97,11 @@ export interface FileRoutesByFullPath {
   '/dashboard': typeof DashboardRoute
   '/forgot-password': typeof ForgotPasswordRoute
   '/library': typeof LibraryRoute
-
-  '/pricing': typeof PricingRoute
-  '/subscription': typeof SubscriptionRoute
-
   '/login': typeof LoginRoute
+  '/pricing': typeof PricingRoute
   '/register': typeof RegisterRoute
   '/reset-password': typeof ResetPasswordRoute
-
+  '/subscription': typeof SubscriptionRoute
   '/workspace': typeof WorkspaceRoute
 }
 export interface FileRoutesByTo {
@@ -118,14 +112,11 @@ export interface FileRoutesByTo {
   '/dashboard': typeof DashboardRoute
   '/forgot-password': typeof ForgotPasswordRoute
   '/library': typeof LibraryRoute
-
-  '/pricing': typeof PricingRoute
-  '/subscription': typeof SubscriptionRoute
-
   '/login': typeof LoginRoute
+  '/pricing': typeof PricingRoute
   '/register': typeof RegisterRoute
   '/reset-password': typeof ResetPasswordRoute
-
+  '/subscription': typeof SubscriptionRoute
   '/workspace': typeof WorkspaceRoute
 }
 export interface FileRoutesById {
@@ -137,76 +128,58 @@ export interface FileRoutesById {
   '/dashboard': typeof DashboardRoute
   '/forgot-password': typeof ForgotPasswordRoute
   '/library': typeof LibraryRoute
-
-  '/pricing': typeof PricingRoute
-  '/subscription': typeof SubscriptionRoute
-
   '/login': typeof LoginRoute
+  '/pricing': typeof PricingRoute
   '/register': typeof RegisterRoute
   '/reset-password': typeof ResetPasswordRoute
-
+  '/subscription': typeof SubscriptionRoute
   '/workspace': typeof WorkspaceRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
   fullPaths:
     | '/'
-
     | '/access-control'
     | '/billing'
     | '/checkout'
     | '/dashboard'
-    | '/library'
-    | '/pricing'
-    | '/subscription'
-
-    | '/dashboard'
     | '/forgot-password'
     | '/library'
     | '/login'
+    | '/pricing'
     | '/register'
     | '/reset-password'
-
+    | '/subscription'
     | '/workspace'
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/'
-
     | '/access-control'
     | '/billing'
     | '/checkout'
     | '/dashboard'
-    | '/library'
-    | '/pricing'
-    | '/subscription'
-
-    | '/dashboard'
     | '/forgot-password'
     | '/library'
     | '/login'
+    | '/pricing'
     | '/register'
     | '/reset-password'
-
+    | '/subscription'
     | '/workspace'
   id:
     | '__root__'
     | '/'
-
     | '/access-control'
     | '/billing'
     | '/checkout'
     | '/dashboard'
-    | '/library'
-    | '/pricing'
-    | '/subscription'
-
-    | '/dashboard'
     | '/forgot-password'
     | '/library'
     | '/login'
+    | '/pricing'
     | '/register'
     | '/reset-password'
-
+    | '/subscription'
     | '/workspace'
   fileRoutesById: FileRoutesById
 }
@@ -218,14 +191,11 @@ export interface RootRouteChildren {
   DashboardRoute: typeof DashboardRoute
   ForgotPasswordRoute: typeof ForgotPasswordRoute
   LibraryRoute: typeof LibraryRoute
-
-  PricingRoute: typeof PricingRoute
-  SubscriptionRoute: typeof SubscriptionRoute
-
   LoginRoute: typeof LoginRoute
+  PricingRoute: typeof PricingRoute
   RegisterRoute: typeof RegisterRoute
   ResetPasswordRoute: typeof ResetPasswordRoute
-
+  SubscriptionRoute: typeof SubscriptionRoute
   WorkspaceRoute: typeof WorkspaceRoute
 }
 
@@ -238,7 +208,6 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof WorkspaceRouteImport
       parentRoute: typeof rootRouteImport
     }
-
     '/subscription': {
       id: '/subscription'
       path: '/subscription'
@@ -246,12 +215,6 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof SubscriptionRouteImport
       parentRoute: typeof rootRouteImport
     }
-    '/pricing': {
-      id: '/pricing'
-      path: '/pricing'
-      fullPath: '/pricing'
-      preLoaderRoute: typeof PricingRouteImport
-
     '/reset-password': {
       id: '/reset-password'
       path: '/reset-password'
@@ -266,12 +229,18 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof RegisterRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/pricing': {
+      id: '/pricing'
+      path: '/pricing'
+      fullPath: '/pricing'
+      preLoaderRoute: typeof PricingRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/login': {
       id: '/login'
       path: '/login'
       fullPath: '/login'
       preLoaderRoute: typeof LoginRouteImport
-
       parentRoute: typeof rootRouteImport
     }
     '/library': {
@@ -334,14 +303,11 @@ const rootRouteChildren: RootRouteChildren = {
   DashboardRoute: DashboardRoute,
   ForgotPasswordRoute: ForgotPasswordRoute,
   LibraryRoute: LibraryRoute,
-
-  PricingRoute: PricingRoute,
-  SubscriptionRoute: SubscriptionRoute,
-
   LoginRoute: LoginRoute,
+  PricingRoute: PricingRoute,
   RegisterRoute: RegisterRoute,
   ResetPasswordRoute: ResetPasswordRoute,
-
+  SubscriptionRoute: SubscriptionRoute,
   WorkspaceRoute: WorkspaceRoute,
 }
 export const routeTree = rootRouteImport

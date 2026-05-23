@@ -2,6 +2,15 @@ import { createFileRoute, Link } from "@tanstack/react-router";
 import { Icon } from "../components/Icon";
 import { useState, useEffect, useRef } from "react";
 import { Logo } from "../components/Logo";
+<<<<<<< HEAD
+=======
+
+import { PlanCard } from "../components/billing/PlanCard";
+import { PLANS } from "../lib/subscription-data";
+
+import { Button } from "@/components/ui/button";
+
+>>>>>>> 731470ec75e1ed0aa897f896b78b5eef0ec8ff20
 
 export const Route = createFileRoute("/")({
   head: () => ({
@@ -398,6 +407,12 @@ function Landing() {
   );
 }
 
+<<<<<<< HEAD
+=======
+
+// Removed PricingCard as we now use PlanCard
+
+>>>>>>> 731470ec75e1ed0aa897f896b78b5eef0ec8ff20
 function PricingCard({ tier, price, features, cta, highlight, priceXl = true }: {
   tier: string; price: string; features: string[]; cta: string; highlight?: "popular" | "dark"; priceXl?: boolean;
 }) {
@@ -422,3 +437,11 @@ function PricingCard({ tier, price, features, cta, highlight, priceXl = true }: 
     </div>
   );
 }
+<<<<<<< HEAD
+=======
+
+
+
+
+
+>>>>>>> 731470ec75e1ed0aa897f896b78b5eef0ec8ff20

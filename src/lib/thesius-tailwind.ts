@@ -707,6 +707,10 @@ export const thesiusGlobalCss = `
     animation: fadeInUp 0.4s cubic-bezier(0.16, 1, 0.3, 1) both;
   }
 
+<<<<<<< HEAD
+=======
+
+>>>>>>> 731470ec75e1ed0aa897f896b78b5eef0ec8ff20
   /* ━━ Billing & Subscription ━━ */
   .pricing-popular {
     border: 1px solid rgba(201, 169, 98, 0.45) !important;
@@ -724,4 +728,43 @@ export const thesiusGlobalCss = `
   
   .billing-table th { font-weight: 600; }
   .billing-table td { vertical-align: middle; }
+<<<<<<< HEAD
+=======
+=======
+  /* â”â” Auth surfaces â”â” */
+  .auth-shell {
+    position: relative;
+    isolation: isolate;
+  }
+  .auth-shell::before {
+    content: '';
+    position: absolute;
+    inset: 8% auto auto 50%;
+    width: min(640px, 92vw);
+    height: 380px;
+    transform: translateX(-50%);
+    background: radial-gradient(circle, rgba(201,169,98,0.18), rgba(90,130,180,0.1) 45%, transparent 72%);
+    filter: blur(40px);
+    pointer-events: none;
+    z-index: -1;
+  }
+  .auth-card {
+    background:
+      linear-gradient(165deg, rgba(22,23,33,0.97), rgba(12,12,20,0.98)),
+      radial-gradient(circle at 12% -8%, rgba(201,169,98,0.2), transparent 35%);
+    border: 1px solid rgba(255,255,255,0.12);
+    box-shadow: 0 26px 80px rgba(0,0,0,0.55), inset 0 1px 0 rgba(255,255,255,0.14);
+  }
+  .auth-field {
+    background: linear-gradient(180deg, rgba(255,255,255,0.06), rgba(255,255,255,0.02));
+    border: 1px solid rgba(255,255,255,0.14);
+    transition: border-color 0.25s, box-shadow 0.25s, background 0.25s;
+  }
+  .auth-field:focus {
+    border-color: rgba(201,169,98,0.55);
+    box-shadow: 0 0 0 3px rgba(201,169,98,0.18);
+    background: linear-gradient(180deg, rgba(255,255,255,0.08), rgba(255,255,255,0.04));
+  }
+
+>>>>>>> 731470ec75e1ed0aa897f896b78b5eef0ec8ff20
 `;

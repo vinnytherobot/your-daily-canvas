@@ -10,11 +10,21 @@
 
 import { Route as rootRouteImport } from './routes/__root'
 import { Route as WorkspaceRouteImport } from './routes/workspace'
+<<<<<<< HEAD
 import { Route as SubscriptionRouteImport } from './routes/subscription'
 import { Route as ResetPasswordRouteImport } from './routes/reset-password'
 import { Route as RegisterRouteImport } from './routes/register'
 import { Route as PricingRouteImport } from './routes/pricing'
 import { Route as LoginRouteImport } from './routes/login'
+=======
+
+import { Route as SubscriptionRouteImport } from './routes/subscription'
+import { Route as PricingRouteImport } from './routes/pricing'
+
+import { Route as ResetPasswordRouteImport } from './routes/reset-password'
+import { Route as RegisterRouteImport } from './routes/register'
+
+>>>>>>> 731470ec75e1ed0aa897f896b78b5eef0ec8ff20
 import { Route as LibraryRouteImport } from './routes/library'
 import { Route as ForgotPasswordRouteImport } from './routes/forgot-password'
 import { Route as DashboardRouteImport } from './routes/dashboard'
@@ -28,11 +38,22 @@ const WorkspaceRoute = WorkspaceRouteImport.update({
   path: '/workspace',
   getParentRoute: () => rootRouteImport,
 } as any)
+<<<<<<< HEAD
+=======
+
+>>>>>>> 731470ec75e1ed0aa897f896b78b5eef0ec8ff20
 const SubscriptionRoute = SubscriptionRouteImport.update({
   id: '/subscription',
   path: '/subscription',
   getParentRoute: () => rootRouteImport,
 } as any)
+<<<<<<< HEAD
+=======
+const PricingRoute = PricingRouteImport.update({
+  id: '/pricing',
+  path: '/pricing',
+
+>>>>>>> 731470ec75e1ed0aa897f896b78b5eef0ec8ff20
 const ResetPasswordRoute = ResetPasswordRouteImport.update({
   id: '/reset-password',
   path: '/reset-password',
@@ -43,6 +64,7 @@ const RegisterRoute = RegisterRouteImport.update({
   path: '/register',
   getParentRoute: () => rootRouteImport,
 } as any)
+<<<<<<< HEAD
 const PricingRoute = PricingRouteImport.update({
   id: '/pricing',
   path: '/pricing',
@@ -51,6 +73,12 @@ const PricingRoute = PricingRouteImport.update({
 const LoginRoute = LoginRouteImport.update({
   id: '/login',
   path: '/login',
+=======
+const LoginRoute = LoginRouteImport.update({
+  id: '/login',
+  path: '/login',
+
+>>>>>>> 731470ec75e1ed0aa897f896b78b5eef0ec8ff20
   getParentRoute: () => rootRouteImport,
 } as any)
 const LibraryRoute = LibraryRouteImport.update({
@@ -97,11 +125,22 @@ export interface FileRoutesByFullPath {
   '/dashboard': typeof DashboardRoute
   '/forgot-password': typeof ForgotPasswordRoute
   '/library': typeof LibraryRoute
+<<<<<<< HEAD
+=======
+
+  '/pricing': typeof PricingRoute
+  '/subscription': typeof SubscriptionRoute
+
+>>>>>>> 731470ec75e1ed0aa897f896b78b5eef0ec8ff20
   '/login': typeof LoginRoute
   '/pricing': typeof PricingRoute
   '/register': typeof RegisterRoute
   '/reset-password': typeof ResetPasswordRoute
+<<<<<<< HEAD
   '/subscription': typeof SubscriptionRoute
+=======
+
+>>>>>>> 731470ec75e1ed0aa897f896b78b5eef0ec8ff20
   '/workspace': typeof WorkspaceRoute
 }
 export interface FileRoutesByTo {
@@ -112,11 +151,22 @@ export interface FileRoutesByTo {
   '/dashboard': typeof DashboardRoute
   '/forgot-password': typeof ForgotPasswordRoute
   '/library': typeof LibraryRoute
+<<<<<<< HEAD
+=======
+
+  '/pricing': typeof PricingRoute
+  '/subscription': typeof SubscriptionRoute
+
+>>>>>>> 731470ec75e1ed0aa897f896b78b5eef0ec8ff20
   '/login': typeof LoginRoute
   '/pricing': typeof PricingRoute
   '/register': typeof RegisterRoute
   '/reset-password': typeof ResetPasswordRoute
+<<<<<<< HEAD
   '/subscription': typeof SubscriptionRoute
+=======
+
+>>>>>>> 731470ec75e1ed0aa897f896b78b5eef0ec8ff20
   '/workspace': typeof WorkspaceRoute
 }
 export interface FileRoutesById {
@@ -128,17 +178,32 @@ export interface FileRoutesById {
   '/dashboard': typeof DashboardRoute
   '/forgot-password': typeof ForgotPasswordRoute
   '/library': typeof LibraryRoute
+<<<<<<< HEAD
+=======
+
+  '/pricing': typeof PricingRoute
+  '/subscription': typeof SubscriptionRoute
+
+>>>>>>> 731470ec75e1ed0aa897f896b78b5eef0ec8ff20
   '/login': typeof LoginRoute
   '/pricing': typeof PricingRoute
   '/register': typeof RegisterRoute
   '/reset-password': typeof ResetPasswordRoute
+<<<<<<< HEAD
   '/subscription': typeof SubscriptionRoute
+=======
+
+>>>>>>> 731470ec75e1ed0aa897f896b78b5eef0ec8ff20
   '/workspace': typeof WorkspaceRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
   fullPaths:
     | '/'
+<<<<<<< HEAD
+=======
+
+>>>>>>> 731470ec75e1ed0aa897f896b78b5eef0ec8ff20
     | '/access-control'
     | '/billing'
     | '/checkout'
@@ -150,12 +215,27 @@ export interface FileRouteTypes {
     | '/register'
     | '/reset-password'
     | '/subscription'
+<<<<<<< HEAD
+=======
+
+    | '/dashboard'
+    | '/forgot-password'
+    | '/library'
+    | '/login'
+    | '/register'
+    | '/reset-password'
+
+>>>>>>> 731470ec75e1ed0aa897f896b78b5eef0ec8ff20
     | '/workspace'
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/'
+<<<<<<< HEAD
+=======
+
+>>>>>>> 731470ec75e1ed0aa897f896b78b5eef0ec8ff20
     | '/access-control'
-    | '/billing'
+    | '/billing'  
     | '/checkout'
     | '/dashboard'
     | '/forgot-password'
@@ -165,10 +245,25 @@ export interface FileRouteTypes {
     | '/register'
     | '/reset-password'
     | '/subscription'
+<<<<<<< HEAD
+=======
+
+    | '/dashboard'
+    | '/forgot-password'
+    | '/library'
+    | '/login'
+    | '/register'
+    | '/reset-password'
+
+>>>>>>> 731470ec75e1ed0aa897f896b78b5eef0ec8ff20
     | '/workspace'
   id:
     | '__root__'
     | '/'
+<<<<<<< HEAD
+=======
+
+>>>>>>> 731470ec75e1ed0aa897f896b78b5eef0ec8ff20
     | '/access-control'
     | '/billing'
     | '/checkout'
@@ -180,6 +275,17 @@ export interface FileRouteTypes {
     | '/register'
     | '/reset-password'
     | '/subscription'
+<<<<<<< HEAD
+=======
+
+    | '/dashboard'
+    | '/forgot-password'
+    | '/library'
+    | '/login'
+    | '/register'
+    | '/reset-password'
+
+>>>>>>> 731470ec75e1ed0aa897f896b78b5eef0ec8ff20
     | '/workspace'
   fileRoutesById: FileRoutesById
 }
@@ -191,11 +297,22 @@ export interface RootRouteChildren {
   DashboardRoute: typeof DashboardRoute
   ForgotPasswordRoute: typeof ForgotPasswordRoute
   LibraryRoute: typeof LibraryRoute
+<<<<<<< HEAD
+=======
+
+  PricingRoute: typeof PricingRoute
+  SubscriptionRoute: typeof SubscriptionRoute
+
+>>>>>>> 731470ec75e1ed0aa897f896b78b5eef0ec8ff20
   LoginRoute: typeof LoginRoute
   PricingRoute: typeof PricingRoute
   RegisterRoute: typeof RegisterRoute
   ResetPasswordRoute: typeof ResetPasswordRoute
+<<<<<<< HEAD
   SubscriptionRoute: typeof SubscriptionRoute
+=======
+
+>>>>>>> 731470ec75e1ed0aa897f896b78b5eef0ec8ff20
   WorkspaceRoute: typeof WorkspaceRoute
 }
 
@@ -208,6 +325,10 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof WorkspaceRouteImport
       parentRoute: typeof rootRouteImport
     }
+<<<<<<< HEAD
+=======
+
+>>>>>>> 731470ec75e1ed0aa897f896b78b5eef0ec8ff20
     '/subscription': {
       id: '/subscription'
       path: '/subscription'
@@ -215,6 +336,15 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof SubscriptionRouteImport
       parentRoute: typeof rootRouteImport
     }
+<<<<<<< HEAD
+=======
+    '/pricing': {
+      id: '/pricing'
+      path: '/pricing'
+      fullPath: '/pricing'
+      preLoaderRoute: typeof PricingRouteImport
+
+>>>>>>> 731470ec75e1ed0aa897f896b78b5eef0ec8ff20
     '/reset-password': {
       id: '/reset-password'
       path: '/reset-password'
@@ -229,6 +359,7 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof RegisterRouteImport
       parentRoute: typeof rootRouteImport
     }
+<<<<<<< HEAD
     '/pricing': {
       id: '/pricing'
       path: '/pricing'
@@ -236,11 +367,17 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof PricingRouteImport
       parentRoute: typeof rootRouteImport
     }
+=======
+>>>>>>> 731470ec75e1ed0aa897f896b78b5eef0ec8ff20
     '/login': {
       id: '/login'
       path: '/login'
       fullPath: '/login'
       preLoaderRoute: typeof LoginRouteImport
+<<<<<<< HEAD
+=======
+
+>>>>>>> 731470ec75e1ed0aa897f896b78b5eef0ec8ff20
       parentRoute: typeof rootRouteImport
     }
     '/library': {
@@ -303,11 +440,22 @@ const rootRouteChildren: RootRouteChildren = {
   DashboardRoute: DashboardRoute,
   ForgotPasswordRoute: ForgotPasswordRoute,
   LibraryRoute: LibraryRoute,
+<<<<<<< HEAD
+=======
+
+  PricingRoute: PricingRoute,
+  SubscriptionRoute: SubscriptionRoute,
+
+>>>>>>> 731470ec75e1ed0aa897f896b78b5eef0ec8ff20
   LoginRoute: LoginRoute,
   PricingRoute: PricingRoute,
   RegisterRoute: RegisterRoute,
   ResetPasswordRoute: ResetPasswordRoute,
+<<<<<<< HEAD
   SubscriptionRoute: SubscriptionRoute,
+=======
+
+>>>>>>> 731470ec75e1ed0aa897f896b78b5eef0ec8ff20
   WorkspaceRoute: WorkspaceRoute,
 }
 export const routeTree = rootRouteImport
